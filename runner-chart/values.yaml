@@ -1,0 +1,19 @@
+appName: action-runner
+image: quay.io/redhat-github-actions/redhat-actions-runner
+tag: latest
+replicas: 1
+
+githubOwner: redhat-actions
+githubRepository: openshift-hosted-runner
+
+memoryLimit: '1Gi'
+cpuLimit: '750m'
+
+privileged: false
+
+runnerEnv:
+    # You can inject environment variables here:
+    # - name: ENV_VAR
+    #   value: env_value
+    # or, through the command line:
+    # --set runnerEnv[0].name="ENV_VAR" --set runnerEnv[0].value="env_value"

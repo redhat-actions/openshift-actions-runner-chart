@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.appName }}
+  labels:
+    app: {{ .Values.appName }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}
+  replicas: {{ .Values.replicas }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }}
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+        - name: {{ .Values.appName }}
+          image: {{ .Values.image }}
+          imagePullPolicy: Always
+
+          securityContext:
+            allowPrivilegeEscalation: {{ .Values.privileged }}
+            privileged: {{ .Values.privileged }}
+
+          env:
+            - name: GITHUB_OWNER
+              value: {{ .Values.githubOwner }}
+            - name: GITHUB_REPOSITORY
+              value: {{ .Values.githubRepository }}
+            - name: GITHUB_PAT
+              valueFrom:
+                secretKeyRef:
+                  name: gh-pat
+                  key: gh-pat
+            # Any injected env values from values.yaml will go below
+              {{- range .Values.runnerEnv }}
+            - name: {{ .name }}
+              value: {{ .value }}
+        {{- end }}
+          resources:
+              limits:
+                memory: {{ .Values.memoryLimit }}
+                cpu: {{ .Values.cpuLimit }}
