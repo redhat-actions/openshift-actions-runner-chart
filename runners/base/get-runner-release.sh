@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Use the GitHub API to find the latest release of the GitHub Action runner,
+# then download and extract the tarball for that release.
+
 set -eE -o pipefail
 
 release_file=/tmp/latest-runner-release.json
@@ -18,6 +21,7 @@ curl -sSLf -H "$auth_header" -H 'Accept: application/json' -o $release_file $rel
 latest_tag=$(jq -r '.tag_name' $release_file)
 echo "Latest runner is ${latest_tag}"
 rm $release_file
+
 tag_without_v=$(echo $latest_tag | cut -c 2-)
 
 os="linux"      # could be "win" or "osx"

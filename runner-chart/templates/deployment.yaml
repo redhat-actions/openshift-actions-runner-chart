@@ -31,6 +31,8 @@ spec:
               value: {{ .Values.githubOwner }}
             - name: GITHUB_REPOSITORY
               value: {{ .Values.githubRepository }}
+            - name: RUNNER_LABELS
+              value: {{ .Values.runnerLabels }}
             - name: GITHUB_PAT
               valueFrom:
                 secretKeyRef:

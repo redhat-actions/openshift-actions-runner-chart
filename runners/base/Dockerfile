@@ -9,22 +9,20 @@ RUN dnf -y update
     # dnf -y install epel-release
 
 RUN dnf -y --setopt=skip_missing_names_on_install=False install \
-    curl \
-    git \
-    jq \
-    hostname && \
+    curl git jq hostname && \
     dnf clean all
 
 ARG USER=runner
 ARG UID=1001
-ARG GITHUB_PAT=""
 
-ENV GITHUB_PAT $GITHUB_PAT
+# Override these when creating the container.
+ENV GITHUB_PAT ""
 ENV GITHUB_OWNER ""
 ENV GITHUB_REPOSITORY ""
 ENV RUNNER_WORKDIR "_work"
 ENV RUNNER_LABELS ""
 
+# Create our user and their home directory
 RUN useradd -m $USER -u $UID
 RUN usermod -G 0 $USER
 ENV HOME /home/$USER
