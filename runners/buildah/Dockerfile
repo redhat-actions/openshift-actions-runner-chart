@@ -37,7 +37,7 @@ ENV STORAGE_DRIVER=vfs
 # isolate the filesystem with chroot.
 ENV _BUILDAH_STARTED_IN_USERNS="" BUILDAH_ISOLATION=chroot
 
-ENV RUNNER_LABELS="$RUNNER_LABELS container-tools"
+ENV RUNNER_LABELS="${RUNNER_LABELS},container-tools"
 
 # ENTRYPOINT /bin/sh
 
