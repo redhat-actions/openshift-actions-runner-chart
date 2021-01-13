@@ -6,13 +6,24 @@ set -eE -o pipefail
 
 ./uid.sh
 
-# https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#self-hosted-runners
+if [ -z "${GITHUB_OWNER:-}" ]; then
+    echo "Fatal: \$GITHUB_OWNER must be set in the environment"
+    exit 1
+fi
+
+# https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#create-a-registration-token-for-an-organization
 
 registration_url="https://github.com/${GITHUB_OWNER}"
 if [ -z "${RUNNER_TOKEN:-}" ]; then
     if [ -z "${GITHUB_REPOSITORY}" ]; then
+        echo "Runner is scoped to organization '${GITHUB_OWNER}'"
+        echo "View runner status at https://github.com/organizations/${GITHUB_OWNER}/settings/actions"
+
         token_url="https://api.github.com/orgs/${GITHUB_OWNER}/actions/runners/registration-token"
     else
+        echo "Runner is scoped to repository '${GITHUB_OWNER}/${GITHUB_REPOSITORY}'"
+        echo "View runner status at https://github.com/${GITHUB_OWNER}/${GITHUB_REPOSITORY}/settings/actions"
+
         token_url="https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPOSITORY}/actions/runners/registration-token"
         registration_url="${registration_url}/${GITHUB_REPOSITORY}"
     fi
@@ -20,10 +31,12 @@ if [ -z "${RUNNER_TOKEN:-}" ]; then
 
     payload=$(curl -sSfLX POST -H "Authorization: token ${GITHUB_PAT}" ${token_url})
     export RUNNER_TOKEN=$(echo $payload | jq .token --raw-output)
-    echo "Obtained token"
+    echo "Obtained registration token"
 else
     echo "Using RUNNER_TOKEN from environment"
 fi
+
+echo "Starting runner with working directory '${RUNNER_WORKDIR}' and labels '${RUNNER_LABELS}'"
 
 ./config.sh \
     --name $(hostname) \

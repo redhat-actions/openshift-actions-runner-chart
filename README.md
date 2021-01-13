@@ -1,12 +1,12 @@
 # OpenShift Hosted GitHub Action Runners
 
-This repository contains tools for building and deploying containers in an OpenShift cluster that act as GitHub self-hosted runners.
+This repository contains tools for building and deploying containers in an OpenShift cluster that act as [self-hosted GitHub Action runners](https://docs.github.com/en/free-pro-team@latest/actions/hosting-your-own-runners/about-self-hosted-runners).
 
-See [`runners/base`](./runners/base) for the base Action runner.
+See [`runners/base`](./runners/base) for the base runner.
 
-See [`runners/buildah`](./runners/buildah) for a Dockerfile which builds on the base runner to add buildah and podman (with caveats - see [the README](./runners/buildah/README.md) under that directory).
+See [`runners/buildah`](./runners/buildah) for a Dockerfile which builds on the base runner to add buildah and podman - [with caveats](./runners/buildah/README.md).
 
-The idea is that the base runner can be extended to build larger, more complex images that have additional capabilities.
+The idea is that the base runner [can be extended](#creating-your-own-runner-image) to build larger, more complex images that have additional capabilities.
 
 The images are hosted at [quay.io/redhat-github-actions](https://quay.io/redhat-github-actions/).
 
@@ -15,8 +15,16 @@ The images are hosted at [quay.io/redhat-github-actions](https://quay.io/redhat-
 You can install the runner into your cluster using the Helm chart in this repository.
 
 1. Runners can be scoped to an organization or a repository. Decide what the scope of your runner will be.
-2. [Create a GitHub Personal Access Token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) (PAT) which has the `repo` permission scope. The user who created the token must have administrator permission on the repository/organization the runner will be added to. This will be stored in [a Kubernetes secret](./runner-chart/templates/pat-secret.yaml).
-3. Clone this repository and `cd` into it.
+2. [Create a GitHub Personal Access Token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) (PAT) which has the `repo` permission scope.
+    - The user who created the token must have administrator permission on the repository/organization the runner will be added to.
+    - If the runner will be organization-scoped, the token must also have the `admin:org` scope.
+    - This will be stored in [a Kubernetes secret](./runner-chart/templates/pat-secret.yaml).
+    - Make sure the cluster or namespace you are installing into is sufficiently secure, since anyone who can describe the secret or shell into the container can read your token.
+3. Clone this repository and `cd` into it:
+```bash
+git clone git@github.com:redhat-actions/openshift-hosted-runner.git && \
+cd openshift-hosted-runner
+```
 4. Install the helm chart, overriding the necessary values:
 
 ```bash

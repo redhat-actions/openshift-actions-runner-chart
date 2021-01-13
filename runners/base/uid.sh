@@ -15,7 +15,7 @@ if ! whoami &> /dev/null; then
   if [ -w /etc/passwd ]; then
     echo "Creating passwd entry for $username"
     echo "${username}:x:${uid}:0:${username} user:${HOME}:/sbin/nologin" >> /etc/passwd
-    echo "New passwd entry:"
+    echo -n "New passwd entry: "
     tail -n 1 /etc/passwd
   else
     echo "No write permission to /etc/passwd!" 1>&2
