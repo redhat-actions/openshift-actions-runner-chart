@@ -2,61 +2,79 @@ name: Update OpenShift self-hosted runner images
 on:
   push:
     branches: [ main ]
+    tags: [ v* ]
 
 env:
   REGISTRY_USER: redhat-github-actions+redhat_actions_ci_pusher
   REGISTRY_URL: quay.io/redhat-github-actions
 
   BASE_IMG_NAME: redhat-actions-runner
-  BASE_IMG_TAG: latest
   BASE_IMG_DIR: runners/base
 
   BUILDAH_IMG_NAME: redhat-buildah-runner
-  BUILDAH_IMG_TAG: latest
   BUILDAH_IMG_DIR: runners/buildah
 
 jobs:
-  update-images:
+  update_images:
     name: Build and push images
     runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v2
 
-      - uses: redhat-actions/buildah-build@v1
+      - uses: tetchel/commit-data@v1
+        id: commit_data
+
+      - name: Determine tag
+        run: |
+          export IMG_TAG=latest
+          export GIT_TAG="${{ steps.commit_data.outputs.tag }}"
+
+          if [[ -n $GIT_TAG ]]; then
+            IMG_TAG=$GIT_TAG
+          fi
+
+          echo "IMG_TAG=$IMG_TAG" >> $GITHUB_ENV
+          echo "Tagging images with '$IMG_TAG'"
+
+      - name: Build base image
+        uses: redhat-actions/buildah-build@v1
         with:
           image: ${{ env.BASE_IMG_NAME }}
-          tag: ${{ env.BASE_IMG_TAG }}
+          tag: ${{ env.IMG_TAG }}
           oci: true
           context:
             ${{ env.BASE_IMG_DIR }}
           dockerfiles:
             ${{ env.BASE_IMG_DIR }}/Dockerfile
 
-      - uses: redhat-actions/push-to-registry@v1
+      - name: Push base image
+        uses: redhat-actions/push-to-registry@v1
         with:
           image: ${{ env.BASE_IMG_NAME }}
-          tag: ${{ env.BASE_IMG_TAG }}
+          tag: ${{ env.IMG_TAG }}
           registry: ${{ env.REGISTRY_URL }}
           username: ${{ env.REGISTRY_USER }}
           password: ${{ secrets.QUAY_TOKEN }}
 
       # The buildah image is done on the same machine so that it doesn't have to pull the updated base image; it's already there locally.
 
-      - uses: redhat-actions/buildah-build@v1
+      - name: Build buildah image
+        uses: redhat-actions/buildah-build@v1
         with:
           image: ${{ env.BUILDAH_IMG_NAME }}
-          tag: ${{ env.BUILDAH_IMG_TAG }}
+          tag: ${{ env.IMG_TAG }}
           oci: true
           context:
             ${{ env.BUILDAH_IMG_DIR }}
           dockerfiles:
             ${{ env.BUILDAH_IMG_DIR }}/Dockerfile
 
-      - uses: redhat-actions/push-to-registry@v1
+      - name: Push buildah image
+        uses: redhat-actions/push-to-registry@v1
         with:
           image: ${{ env.BUILDAH_IMG_NAME }}
-          tag: ${{ env.BUILDAH_IMG_TAG }}
+          tag: ${{ env.IMG_TAG }}
           registry: ${{ env.REGISTRY_URL }}
           username: ${{ env.REGISTRY_USER }}
           password: ${{ secrets.QUAY_TOKEN }}
