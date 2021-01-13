@@ -2,19 +2,22 @@
 
 set -eE -o pipefail
 
-export REGISTRY=quay.io/tetchell
+export REGISTRY=quay.io/redhat-github-actions
+export TAG=latest
 
 if [[ -z $BASE_IMG ]]; then
-    BASE_IMG=${REGISTRY}/redhat-actions-runner:latest
+    BASE_IMG=${REGISTRY}/redhat-actions-runner:${TAG}
 fi
 
 if [[ -z $BULIDAH_IMG ]]; then
-    BUILDAH_IMG=${REGISTRY}/buildah-runner:latest
+    BUILDAH_IMG=${REGISTRY}/redhat-buildah-runner:${TAG}
 fi
 
 set -x
 
-docker build ./base -f ./base/Dockerfile -t $BASE_IMG
+cd runners/
+
+docker build ./base -f /base/Dockerfile -t $BASE_IMG
 docker build ./buildah -f ./buildah/Dockerfile -t $BUILDAH_IMG
 
 set +x
@@ -26,3 +29,5 @@ if [[ $1 == "push" ]]; then
 else
     echo "Not pushing. Set \$1 to 'push' to push"
 fi
+
+cd - > /dev/null
