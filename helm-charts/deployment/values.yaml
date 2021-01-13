@@ -1,4 +1,4 @@
-appName: action-runner
+appName: runner
 image: quay.io/redhat-github-actions/redhat-actions-runner
 tag: latest
 replicas: 1

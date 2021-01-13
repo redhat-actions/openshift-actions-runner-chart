@@ -18,21 +18,27 @@ You can install the runner into your cluster using the Helm chart in this reposi
 2. [Create a GitHub Personal Access Token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) (PAT) which has the `repo` permission scope.
     - The user who created the token must have administrator permission on the repository/organization the runner will be added to.
     - If the runner will be organization-scoped, the token must also have the `admin:org` scope.
-    - This will be stored in [a Kubernetes secret](./runner-chart/templates/pat-secret.yaml).
+    - This will be stored in [a Kubernetes secret](./helm-charts/pat-secret).
     - Make sure the cluster or namespace you are installing into is sufficiently secure, since anyone who can describe the secret or shell into the container can read your token.
 3. Clone this repository and `cd` into it:
 ```bash
 git clone git@github.com:redhat-actions/openshift-hosted-runner.git && \
-cd openshift-hosted-runner
+    cd openshift-hosted-runner
 ```
-4. Install the helm chart, overriding the necessary values:
+4. Create the PAT secret.
+```bash
+helm install runner-pat ./helm-charts/runner-pat-secret \
+    --set-string githubPat=$GITHUB_PAT
+```
+5. Install the deployment helm chart. Leave out `githubRepository` if you want an org-scoped runner.
 
 ```bash
-helm install runner ./runner-chart \
-    --set-string githubPat=<your github PAT with repo permission> \
+helm install runner ./helm-charts/deployment \
     --set-string githubOwner=<GitHub user or org that owns the repo> \
     --set-string githubRepository=<repo to add runner to>
 ```
+
+6. You can re-run step 5 if you want to scale up the number of runners, optionally with different images, labels, etc.
 
 For other configuration options, see [`values.yaml`](./runner-chart/values.yaml). The [`Dockerfile`](./runners/base/Dockerfile) also has some environment variables you can override.
 
