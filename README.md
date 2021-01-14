@@ -10,6 +10,11 @@ The idea is that the base runner [can be extended](#creating-your-own-runner-ima
 
 The images are hosted at [quay.io/redhat-github-actions](https://quay.io/redhat-github-actions/).
 
+## Prerequisites
+You must have access to an OpenShift cluster. Visit [openshift.com/try](https://www.openshift.com/try) or sign up for our [Developer Sandbox](https://developers.redhat.com/developer-sandbox).
+
+You do **not** need cluster administrator privileges to deploy the base runner and run workloads.
+
 ## Installing runners using Helm
 
 You can install the runner into your cluster using the Helm chart in this repository.
