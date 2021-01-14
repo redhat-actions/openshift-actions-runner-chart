@@ -1,22 +1,27 @@
 appName: runner
-image: quay.io/redhat-github-actions/redhat-actions-runner
-tag: latest
-replicas: 1
+
+runnerImage: quay.io/redhat-github-actions/redhat-actions-runner
+runnerTag: v0.1
 
 githubOwner: ""
 githubRepository: ""
+
+# These have to match the secret that was created using the secret chart
+secretName: "github-pat"
+secretKey: "github-pat"
 
 # Pass labels comma-delimited. If setting through the helm command line, commas must be escaped.
 # --set runnerLabels="label1\,label2" results in the labels "label1" and "label2".
 runnerLabels: ""
 
-memoryLimit: '1Gi'
-cpuLimit: '750m'
+replicas: 1
+memoryLimit: "1Gi"
+cpuLimit: "500m"
 
 privileged: false
 
 runnerEnv:
-    # You can inject environment variables here:
+    # You can inject arbitrary environment variables here:
     # - name: ENV_VAR
     #   value: env_value
     # or, through the command line:

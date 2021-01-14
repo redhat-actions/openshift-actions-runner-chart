@@ -1,0 +1,4 @@
+appName: github-pat
+secretName: github-pat
+secretKey: github-pat
+githubPat: ""
