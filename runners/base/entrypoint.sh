@@ -4,7 +4,9 @@
 
 set -eE -o pipefail
 
+echo "Invoking uid script.."
 ./uid.sh
+echo "uid script succeeded"
 
 if [ -z "${GITHUB_OWNER:-}" ]; then
     echo "Fatal: \$GITHUB_OWNER must be set in the environment"
@@ -27,7 +29,7 @@ if [ -z "${RUNNER_TOKEN:-}" ]; then
         token_url="https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPOSITORY}/actions/runners/registration-token"
         registration_url="${registration_url}/${GITHUB_REPOSITORY}"
     fi
-    echo "Requesting token at '${token_url}'"
+    echo "Requesting token at ${token_url}"
 
     payload=$(curl -sSfLX POST -H "Authorization: token ${GITHUB_PAT}" ${token_url})
     export RUNNER_TOKEN=$(echo $payload | jq .token --raw-output)
@@ -36,8 +38,7 @@ else
     echo "Using RUNNER_TOKEN from environment"
 fi
 
-echo "Starting runner with working directory '${RUNNER_WORKDIR}' and labels '${RUNNER_LABELS}'"
-
+set -x
 ./config.sh \
     --name $(hostname) \
     --token ${RUNNER_TOKEN} \
@@ -46,6 +47,7 @@ echo "Starting runner with working directory '${RUNNER_WORKDIR}' and labels '${R
     --labels ${RUNNER_LABELS} \
     --unattended \
     --replace
+set +x
 
 remove() {
     payload=$(curl -sSfLX POST -H "Authorization: token ${GITHUB_PAT}" ${token_url%/registration-token}/remove-token)
@@ -57,6 +59,7 @@ remove() {
 trap 'remove; exit 130' INT
 trap 'remove; exit 143' TERM
 
+set -x
 ./bin/runsvc.sh "$*" &
 
 wait $!
