@@ -15,7 +15,7 @@ You must have access to an OpenShift cluster. Visit [openshift.com/try](https://
 
 You do **not** need cluster administrator privileges to deploy the base runner and run workloads.
 
-## Installing runners using Helm
+## Installing runners
 
 You can install the runner into your cluster using the Helm chart in this repository.
 
@@ -23,8 +23,6 @@ You can install the runner into your cluster using the Helm chart in this reposi
 2. [Create a GitHub Personal Access Token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) (PAT) which has the `repo` permission scope.
     - The user who created the token must have administrator permission on the repository/organization the runner will be added to.
     - If the runner will be organization-scoped, the token must also have the `admin:org` scope.
-    - This will be stored in [a Kubernetes secret](./runner-charts/pat-secret).
-    - Make sure the cluster or namespace you are installing into is sufficiently secure, since anyone who can describe the secret or shell into the container can read your token.
 3. Clone this repository and `cd` into it:
 ```bash
 git clone git@github.com:redhat-actions/openshift-hosted-runner.git && \
