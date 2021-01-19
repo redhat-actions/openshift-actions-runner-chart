@@ -30,6 +30,7 @@ spec:
               memory: {{ .Values.memoryLimit }}
               cpu: {{ .Values.cpuLimit }}
 
+
           env:
             - name: GITHUB_OWNER
               value: {{ required ".Values.githubOwner must be set." .Values.githubOwner }}
@@ -47,3 +48,33 @@ spec:
             - name: {{ .name }}
               value: {{ .value }}
         {{- end }}
+# Enable Cluster Wide Proxy
+# https://docs.openshift.com/container-platform/4.6/networking/enable-cluster-wide-proxy.html
+{{ if .Values.clusterProxy }}
+            - name: https_proxy
+              value: {{ required ".Values.https_proxy must be set if .Values.clusterProxy enabled." .Values.https_proxy }}
+            - name: http_proxy
+              value: {{ required ".Values.http_proxy must be set if .Values.clusterProxy enabled." .Values.http_proxy }}
+            - name: no_proxy
+              value: {{ required ".Values.no_proxy must be set if .Values.clusterProxy enabled." .Values.no_proxy }}
+          volumeMounts: 
+            - name: trusted-ca
+              mountPath: /etc/pki/ca-trust/extracted/pem
+              readOnly: true 
+
+      volumes: 
+        - name: trusted-ca
+          configMap:
+            name: trusted-ca
+            items:
+              - key: ca-bundle.crt 
+                path: tls-ca-bundle.pem 
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trusted-ca 
+  labels:
+    config.openshift.io/inject-trusted-cabundle: "true" 
+# Ends cluster proxy
+{{ end }}
