@@ -50,13 +50,15 @@ spec:
         {{- end }}
 # Enable Cluster Wide Proxy
 # https://docs.openshift.com/container-platform/4.6/networking/enable-cluster-wide-proxy.html
-{{ if .Values.clusterProxy }}
+            {{ if .Values.clusterProxy }}
             - name: https_proxy
               value: {{ required ".Values.https_proxy must be set if .Values.clusterProxy enabled." .Values.https_proxy }}
             - name: http_proxy
               value: {{ required ".Values.http_proxy must be set if .Values.clusterProxy enabled." .Values.http_proxy }}
             - name: no_proxy
               value: {{ required ".Values.no_proxy must be set if .Values.clusterProxy enabled." .Values.no_proxy }}
+            {{ end }}
+{{ if .Values.clusterPKI }}
           volumeMounts: 
             - name: trusted-ca
               mountPath: /etc/pki/ca-trust/extracted/pem

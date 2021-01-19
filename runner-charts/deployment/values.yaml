@@ -27,6 +27,10 @@ https_proxy: ""
 http_proxy: ""
 no_proxy: ""
 
+# Enable custom cluster PKI
+# https://docs.openshift.com/container-platform/4.6/networking/configuring-a-custom-pki.html
+clusterPKI: false
+
 runnerEnv:
     # You can inject arbitrary environment variables here:
     # - name: ENV_VAR
