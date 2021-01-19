@@ -22,7 +22,7 @@ privileged: false
 
 # Enable cluster wide proxy
 # https://docs.openshift.com/container-platform/4.6/networking/enable-cluster-wide-proxy.html
-clusterProxy: true
+clusterProxy: false
 https_proxy: ""
 http_proxy: ""
 no_proxy: ""
