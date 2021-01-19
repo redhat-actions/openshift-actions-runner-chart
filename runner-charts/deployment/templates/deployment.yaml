@@ -58,6 +58,9 @@ spec:
             - name: no_proxy
               value: {{ required ".Values.no_proxy must be set if .Values.clusterProxy enabled." .Values.no_proxy }}
             {{ end }}
+
+# Enable custom cluster PKI
+# https://docs.openshift.com/container-platform/4.6/networking/configuring-a-custom-pki.html
 {{ if .Values.clusterPKI }}
           volumeMounts: 
             - name: trusted-ca
