@@ -58,5 +58,40 @@ You can create your own runner image based on this one, and install any runtimes
 3. Build and push your new runner image.
 4. Run the `helm install` as above, but set `runnerImage` to your image, and `runnerTag` to your tag.
 
+## Managing PATs
+
+### Creating a new secret
+You can re-run step 4 with the new PAT, but you will have to `--set` a new `secretName` and `githubPat`.
+
+Then, when you re-run step 5, `--set secretName` to the new secret name used in step 4, so the new PAT is used for the new runner.
+
+### Adding a PAT to an existing secret
+
+You can also add more PATs to the secret without having to create a new one.
+
+First, base64 encode the new PAT.
+```sh
+echo -n "<your PAT>" | base64
+```
+Copy this output.
+
+Then, patch the new PAT into the existing secret. Give it a different key name than any secret key that is already in use, or you will overwrite the existing value.
+
+Here, our secret is named `github-pat`, and we want to name the new PAT `new-pat`.
+
+```sh
+oc patch secret github-pat -p '{ "data": { "new-pat": "<base64 encoded PAT>" } }'
+```
+
+Then, when you re-run step 5, `--set secretKey="new-pat"` so the new PAT is used for the new runner.
+
+### Changing an existing PAT
+
+The procedure for adding a PAT also works for changing existing PATs to new ones - eg, if a PAT is revoked.
+
+Instead of selecting a new secret key name to patch in, just patch the secret key you want to modify.
+
+Note that existing pods will have to be terminated to be re-created with the new PAT.
+
 ## Credits
 This repository builds on the work done in [bbrowning/github-runner](https://github.com/bbrowning/github-runner), which is forked from [SanderKnape/github-runner](https://github.com/SanderKnape/github-runner).
