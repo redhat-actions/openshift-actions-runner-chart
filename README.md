@@ -32,7 +32,7 @@ git clone git@github.com:redhat-actions/openshift-self-hosted-runner.git \
 
 ```bash
 # PAT from step 2. Be careful about exporting this into your shell and history.
-export GITHUB_PAT=coffeeface1234567890
+export GITHUB_PAT=c0ffeeface1234567890
 # For an org runner, this is the org.
 # For a repo runner, this is the repo owner.
 export GITHUB_OWNER=redhat-actions

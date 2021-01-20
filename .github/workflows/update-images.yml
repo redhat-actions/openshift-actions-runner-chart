@@ -1,8 +1,9 @@
 name: Update OpenShift self-hosted runner images
 on:
   push:
-    branches: [ main ]
+    branches: [ "*" ]
     tags: [ v* ]
+  pull_request:
 
 env:
   REGISTRY_USER: redhat-github-actions+redhat_actions_ci_pusher
@@ -50,6 +51,7 @@ jobs:
 
       - name: Push base image
         uses: redhat-actions/push-to-registry@v1
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags')
         with:
           image: ${{ env.BASE_IMG_NAME }}
           tag: ${{ env.IMG_TAG }}
@@ -72,6 +74,7 @@ jobs:
 
       - name: Push buildah image
         uses: redhat-actions/push-to-registry@v1
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags')
         with:
           image: ${{ env.BUILDAH_IMG_NAME }}
           tag: ${{ env.IMG_TAG }}
