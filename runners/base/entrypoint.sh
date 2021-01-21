@@ -11,6 +11,9 @@ echo "uid script succeeded"
 if [ -z "${GITHUB_OWNER:-}" ]; then
     echo "Fatal: \$GITHUB_OWNER must be set in the environment"
     exit 1
+elif [ -z "${GITHUB_PAT:-}" ]; then
+    echo "Fatal: \$GITHUB_PAT must be set in the environment"
+    exit 1
 fi
 
 # https://docs.github.com/en/free-pro-team@latest/rest/reference/actions#create-a-registration-token-for-an-organization
@@ -38,13 +41,20 @@ else
     echo "Using RUNNER_TOKEN from environment"
 fi
 
+labels_arg=""
+if [ -n "${RUNNER_LABELS:-}" ]; then
+    labels_arg="--labels $RUNNER_LABELS"
+else
+    echo "No labels provided"
+fi
+
 set -x
 ./config.sh \
     --name $(hostname) \
     --token ${RUNNER_TOKEN} \
     --url ${registration_url} \
     --work ${RUNNER_WORKDIR} \
-    --labels ${RUNNER_LABELS} \
+    ${labels_arg} \
     --unattended \
     --replace
 set +x
@@ -61,5 +71,6 @@ trap 'remove; exit 143' TERM
 
 set -x
 ./bin/runsvc.sh "$*" &
+svc_pid=$!
 
-wait $!
+wait $svc_pid

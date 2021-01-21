@@ -9,7 +9,7 @@ RUN dnf -y update
     # dnf -y install epel-release
 
 RUN dnf -y --setopt=skip_missing_names_on_install=False install \
-    curl git jq hostname && \
+    curl git jq hostname procps && \
     dnf clean all
 
 ARG USER=runner

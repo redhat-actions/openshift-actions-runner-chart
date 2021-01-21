@@ -32,10 +32,10 @@ jobs:
 
           if [[ -n "${{ steps.commit_data.outputs.tag }}" ]]; then
             IMG_TAG="${{ steps.commit_data.outputs.tag }}"
-          # elif [[ "${{ steps.commit_data.outputs.branch }}" == "main" ]]; then
-          #   IMG_TAG="${{ steps.commit_data.outputs.short_sha }}"
-          else
+          elif [[ -n "${{ steps.commit_data.outputs.branch }}" ]]; then
             IMG_TAG="${{ steps.commit_data.outputs.branch }}-${{ steps.commit_data.outputs.short_sha }}"
+          else
+            IMG_TAG="${{ steps.commit_data.outputs.short_sha }}"
           fi
 
           echo "IMG_TAG=$IMG_TAG" >> $GITHUB_ENV

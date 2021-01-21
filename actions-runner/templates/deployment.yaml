@@ -25,7 +25,6 @@ spec:
       containers:
         - name: {{ .Release.Name }}
           image: {{ .Values.runnerImage }}:{{ .Values.runnerTag }}
-          imagePullPolicy: {{ .Values.imagePullPolicy }}
 
           securityContext:
             privileged: {{ .Values.privileged }}
@@ -34,6 +33,17 @@ spec:
             limits:
               memory: {{ .Values.memoryLimit }}
               cpu: {{ .Values.cpuLimit }}
+
+          # Wait until the runner service is actually listening before the pod goes into the Ready state.
+          # The entrypoint script takes 5-10s to connect to GitHub and start listening for jobs.
+          # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#probe-v1-core
+          readinessProbe:
+            failureThreshold: 2
+            periodSeconds: 5
+            exec:
+              command:
+                - pgrep
+                - Runner.Listener
 
           env:
             - name: GITHUB_OWNER

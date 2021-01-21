@@ -2,7 +2,6 @@ appName: actions-runner
 
 runnerImage: quay.io/redhat-github-actions/redhat-actions-runner
 runnerTag: v0.1
-imagePullPolicy: Always
 
 githubOwner: ""
 githubRepository: ""
