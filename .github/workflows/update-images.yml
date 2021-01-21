@@ -9,10 +9,10 @@ env:
   REGISTRY_USER: redhat-github-actions+redhat_actions_ci_pusher
   REGISTRY_URL: quay.io/redhat-github-actions
 
-  BASE_IMG_NAME: redhat-actions-runner
+  BASE_IMG_NAME: runner
   BASE_IMG_DIR: runners/base
 
-  BUILDAH_IMG_NAME: redhat-buildah-runner
+  BUILDAH_IMG_NAME: buildah-runner
   BUILDAH_IMG_DIR: runners/buildah
 
 jobs:

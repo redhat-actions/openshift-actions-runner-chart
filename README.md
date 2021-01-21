@@ -62,7 +62,7 @@ When the runner pods are terminated for any reason, they should remove themselve
 
 You can create your own runner image based on this one, and install any runtimes and tools your workflows need.
 
-1. Create your own Dockerfile, with `FROM quay.io/redhat-github-actions/redhat-actions-runner:<tag>`.
+1. Create your own Dockerfile, with `FROM quay.io/redhat-github-actions/runner:<tag>`.
 2. Edit the Dockerfile to install and set up your tools, environment, etc. Do not override the `ENTRYPOINT`.
 3. Build and push your new runner image.
 4. Run the `helm install` as above, but set the value `runnerImage` to your image, and `runnerTag` to your tag.
