@@ -1,4 +1,10 @@
-# OpenShift Hosted GitHub Action Runners
+# OpenShift GitHub Action Runners
+
+[![Update Runner Images](https://github.com/redhat-actions/openshift-self-hosted-runner/workflows/Update%20Runner%20Images/badge.svg)](https://github.com/redhat-actions/openshift-self-hosted-runner/actions)
+[![Helm Lint](https://github.com/redhat-actions/openshift-self-hosted-runner/workflows/Helm%20Lint/badge.svg)](https://github.com/redhat-actions/openshift-self-hosted-runner/actions)
+
+[![Tag](https://img.shields.io/github/v/tag/redhat-actions/openshift-self-hosted-runner)](https://github.com/redhat-actions/openshift-self-hosted-runner/tags)
+[![Quay org](https://img.shields.io/badge/quay-redhat--github--actions-red)](https://quay.io/organization/redhat-github-actions)
 
 This repository contains tools for building and deploying containers in an OpenShift cluster that act as [self-hosted GitHub Action runners](https://docs.github.com/en/free-pro-team@latest/actions/hosting-your-own-runners/about-self-hosted-runners).
 

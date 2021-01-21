@@ -1,4 +1,4 @@
-name: Update OpenShift self-hosted runner images
+name: Update Runner Images
 on:
   push:
     branches: [ "*" ]
@@ -17,7 +17,7 @@ env:
 
 jobs:
   update_images:
-    name: Build and push images
+    name: Update images
     runs-on: ubuntu-20.04
 
     steps:
