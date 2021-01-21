@@ -1,4 +1,6 @@
-FROM quay.io/redhat-github-actions/runner:latest AS buildah-runner
+ARG BASE_IMG=quay.io/redhat-github-actions/runner:latest
+
+FROM $BASE_IMG AS buildah-runner
 
 # ARG BUILDAH_RPM=https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/CentOS_7/x86_64/buildah-1.18.0-2.el7.x86_64.rpm
 

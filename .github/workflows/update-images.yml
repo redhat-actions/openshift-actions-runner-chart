@@ -29,19 +29,27 @@ jobs:
       - name: Determine tag
         run: |
           export IMG_TAG=latest
+          export GIT_TAG="${{ steps.commit_data.outputs.tag }}"
+          export BRANCH="${{ steps.commit_data.outputs.branch }}"
 
-          if [[ -n "${{ steps.commit_data.outputs.tag }}" ]]; then
-            IMG_TAG="${{ steps.commit_data.outputs.tag }}"
-          elif [[ -n "${{ steps.commit_data.outputs.branch }}" ]]; then
-            IMG_TAG="${{ steps.commit_data.outputs.branch }}-${{ steps.commit_data.outputs.short_sha }}"
+          if [[ -n "$GIT_TAG" ]]; then
+            IMG_TAG="$GIT_TAG"
+          elif [[ -n "$BRANCH" ]]; then
+            if [[ "$BRANCH" == "main" ]]; then
+              IMG_TAG="latest"
+            else
+              IMG_TAG=$BRANCH
+            fi
           else
             IMG_TAG="${{ steps.commit_data.outputs.short_sha }}"
           fi
 
           echo "IMG_TAG=$IMG_TAG" >> $GITHUB_ENV
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
           echo "Tagging images with '$IMG_TAG'"
 
       - name: Build base image
+        id: build_base_img
         uses: redhat-actions/buildah-build@v1
         with:
           image: ${{ env.BASE_IMG_NAME }}
@@ -74,6 +82,8 @@ jobs:
             ${{ env.BUILDAH_IMG_DIR }}
           dockerfiles:
             ${{ env.BUILDAH_IMG_DIR }}/Dockerfile
+          build-args:
+            BASE_IMG=${{ steps.build_base_img.outputs.image }}
 
       - name: Push buildah image
         uses: redhat-actions/push-to-registry@v1

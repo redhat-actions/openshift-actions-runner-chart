@@ -2,7 +2,8 @@
 
 set -eE -o pipefail
 
-REGISTRY=${RUNNERS_REGISTRY:-quay.io/redhat-github-actions}
+# Replace with your username. Don't push your dev images to redhat-github-actions.
+REGISTRY=${RUNNERS_REGISTRY:-quay.io/tetchell}
 TAG=${RUNNERS_TAG:-latest}
 
 BASE_IMG=${REGISTRY}/runner:${TAG}
