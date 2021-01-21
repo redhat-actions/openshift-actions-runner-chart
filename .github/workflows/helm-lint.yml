@@ -1,8 +1,9 @@
 name: Helm Lint
 on:
   push:
-    branches: [ main ]
-    tags: [ v* ]
+    branches: [ "*" ]
+    tags: [ "*" ]
+  pull_request:
 
 env:
   CHART_DIR: actions-runner

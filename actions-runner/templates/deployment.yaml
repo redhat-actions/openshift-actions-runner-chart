@@ -25,7 +25,6 @@ spec:
       containers:
         - name: {{ .Release.Name }}
           image: {{ .Values.runnerImage }}:{{ .Values.runnerTag }}
-          imagePullPolicy: {{ .Values.imagePullPolicy }}
 
           securityContext:
             privileged: {{ .Values.privileged }}
