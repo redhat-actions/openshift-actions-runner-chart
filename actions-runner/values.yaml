@@ -14,9 +14,9 @@ secretKey: "github-pat"
 # The PAT itself - must be set if the secret is being created.
 githubPat: ""
 
-# Pass labels comma-delimited. If setting through the helm command line, commas must be escaped.
-# --set runnerLabels="label1\,label2" results in the labels "label1" and "label2".
-runnerLabels: ""
+# Pass labels using array syntax, which is curly braces surrounding comma-separated items.
+# --set runnerLabels="{ label1, label2 }" results in the labels "label1" and "label2".
+runnerLabels: []
 
 # Adjust replicas and limits accordingly, depending on your resources available,
 # how many jobs you want to run concurrently,

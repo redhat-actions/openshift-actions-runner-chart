@@ -24,7 +24,9 @@ spec:
         runAsNonRoot: true
       containers:
         - name: {{ .Release.Name }}
-          image: {{ .Values.runnerImage }}:{{ .Values.runnerTag }}
+
+          {{- $taggedImage := printf "%s:%s" .Values.runnerImage .Values.runnerTag }}
+          image: {{ $taggedImage }}
 
           securityContext:
             privileged: {{ .Values.privileged }}
@@ -40,7 +42,7 @@ spec:
             - name: GITHUB_REPOSITORY
               value: {{ .Values.githubRepository }}
             - name: RUNNER_LABELS
-              value: {{ .Values.runnerLabels }}
+              value: {{ $taggedImage }},{{- range .Values.runnerLabels }}{{trim .}},{{- end}}
             - name: GITHUB_PAT
               valueFrom:
                 secretKeyRef:
