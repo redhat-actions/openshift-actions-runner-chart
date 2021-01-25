@@ -2,11 +2,12 @@
 
 set -eE -o pipefail
 
-REGISTRY=${RUNNERS_REGISTRY:-quay.io/redhat-github-actions}
-TAG=${RUNNERS_TAG:-dev}     # 'latest' refers to latest CI build on main branch.
+# Replace with your username. Don't push your dev images to redhat-github-actions.
+REGISTRY=${RUNNERS_REGISTRY:-quay.io/tetchell}
+TAG=${RUNNERS_TAG:-latest}
 
-BASE_IMG=${REGISTRY}/redhat-actions-runner:${TAG}
-BUILDAH_IMG=${REGISTRY}/redhat-buildah-runner:${TAG}
+BASE_IMG=${REGISTRY}/runner:${TAG}
+BUILDAH_IMG=${REGISTRY}/buildah-runner:${TAG}
 
 set -x
 
