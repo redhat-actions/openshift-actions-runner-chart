@@ -1,0 +1,11 @@
+# Enable custom cluster PKI
+# https://docs.openshift.com/container-platform/4.6/networking/configuring-a-custom-pki.html
+{{ if .Values.clusterPKI }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trusted-ca 
+  labels:
+    config.openshift.io/inject-trusted-cabundle: "true" 
+# Ends cluster proxy
+{{ end }}
