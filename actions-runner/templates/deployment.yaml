@@ -4,13 +4,13 @@ metadata:
   name: {{ .Release.Name }}
   labels:
     # https://helm.sh/docs/chart_best_practices/labels/
-    app.kubernetes.io/component: "deployment"
+    app.kubernetes.io/component: deployment
     # DO NOT edit the instance label, it is used by the runner installer action to find the installed pod.
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/name: {{ .Values.appName }}
     app.kubernetes.io/version: {{ .Chart.Version | quote }}
-    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 spec:
   selector:
     matchLabels:
@@ -43,8 +43,9 @@ spec:
               value: {{ required ".Values.githubOwner must be set." .Values.githubOwner }}
             - name: GITHUB_REPOSITORY
               value: {{ .Values.githubRepository }}
+              # The labels must be trimmed. The config script will stop reading labels if it encounters a space.
             - name: RUNNER_LABELS
-              value: {{ $taggedImage }},{{- range .Values.runnerLabels }}{{trim .}},{{- end}}
+              value: "{{ $taggedImage }},{{- range .Values.runnerLabels }}{{trim .}},{{- end}}"
             - name: GITHUB_PAT
               valueFrom:
                 secretKeyRef:
