@@ -26,6 +26,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: {{ .Release.Name }}
+          imagePullPolicy: Always
 
           {{- $taggedImage := printf "%s:%s" .Values.runnerImage .Values.runnerTag }}
           image: {{ $taggedImage }}
