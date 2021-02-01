@@ -23,7 +23,7 @@ runnerLabels: []
 # and how much processing power your workflows require.
 replicas: 1
 memoryLimit: "1Gi"
-cpuLimit: "500m"
+cpuLimit: "250m"
 
 # If you have administrator privileges and understand the security implications of privileged containers,
 # set this to true to easily get buildah and podman working, among other things.
