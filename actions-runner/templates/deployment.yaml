@@ -24,6 +24,11 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
+      volumes:
+        - emptyDir: {}
+          name: runner-work
+        - emptyDir: {}
+          name: runner-diag
       containers:
         - name: {{ .Release.Name }}
           imagePullPolicy: Always
@@ -33,8 +38,12 @@ spec:
 
           securityContext:
             privileged: {{ .Values.privileged }}
+            # readOnlyRootFilesystem: true
 
           resources:
+            requests:
+              memory: {{ .Values.memoryRequest }}
+              cpu: {{ .Values.cpuRequest }}
             limits:
               memory: {{ .Values.memoryLimit }}
               cpu: {{ .Values.cpuLimit }}
@@ -43,13 +52,19 @@ spec:
           # The entrypoint script takes 5-10s to connect to GitHub and start listening for jobs.
           # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#probe-v1-core
           readinessProbe:
-            initialDelaySeconds: 10
+            initialDelaySeconds: 5
             periodSeconds: 5
             failureThreshold: 1
             exec:
               command:
                 - pgrep
                 - Runner.Listener
+
+          volumeMounts:
+            - name: runner-work
+              mountPath: /home/runner/_work
+            - name: runner-diag
+              mountPath: /home/runner/_diag
 
           env:
             - name: GITHUB_OWNER
