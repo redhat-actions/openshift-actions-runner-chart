@@ -5,10 +5,12 @@
 [![Tag](https://img.shields.io/github/v/tag/redhat-actions/openshift-actions-runner-chart)](https://github.com/redhat-actions/openshift-actions-runner-chart/tags)
 [![Quay org](https://img.shields.io/badge/quay-redhat--github--actions-red)](https://quay.io/organization/redhat-github-actions)
 
-This repository contains a Helm chart for deploying one or more [**OpenShift Actions Runners**](https://github.com/redhat-actions/openshift-actions-runner) that act as [self-hosted GitHub Action runners](https://docs.github.com/en/free-pro-team@latest/actions/hosting-your-own-runners/about-self-hosted-runners).
+This repository contains a Helm chart for deploying one or more self-hosted [GitHub Actions Runners]((https://docs.github.com/en/free-pro-team@latest/actions/hosting-your-own-runners/about-self-hosted-runners)) into a Kubernetes cluster. By default, the container image used is the [**OpenShift Actions Runner**](https://github.com/redhat-actions/openshift-actions-runner).
+
+You can deploy runners automatically using the [**Self Hosted Runner Installer Action**](https://github.com/redhat-actions/self-hosted-runner-installer).
 
 ## Prerequisites
-You must have access to an OpenShift cluster. Visit [openshift.com/try](https://www.openshift.com/try) or sign up for our [Developer Sandbox](https://developers.redhat.com/developer-sandbox).
+You must have access to a Kubernetes cluster. Visit [openshift.com/try](https://www.openshift.com/try) or sign up for our [Developer Sandbox](https://developers.redhat.com/developer-sandbox).
 
 You do **not** need cluster administrator privileges to deploy the runners and run workloads, though some images or tools may require special permissions.
 
@@ -16,24 +18,28 @@ You do **not** need cluster administrator privileges to deploy the runners and r
 
 You can install runners into your cluster using the Helm chart in this repository.
 
-1. Runners can be scoped to an organization or a repository. Decide what the scope of your runner will be.
+1. Runners can be scoped to an **organization** or a **repository**. Decide what the scope of your runner will be.
+    - User-scoped runners are not supported by GitHub.
+<a id="pat-guidelines"></a>
 2. [Create a GitHub Personal Access Token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) (PAT) which has the `repo` permission scope.
     - The user who created the token must have administrator permission on the repository/organization the runner will be added to.
-    - If the runner will be for the **organization**, the token must also have the `admin:org` permission scope.
+    - If the runner will be for an organization, the token must also have the `admin:org` permission scope.
+    - The default `secrets.GITHUB_TOKEN` **does not** have permission to manage self-hosted runners. See [Permissions for the GITHUB_TOKEN](https://docs.github.com/en/actions/reference/authentication-in-a-workflow#permissions-for-the-github_token).
 3. Clone this repository and `cd` into it:
 ```bash
 git clone git@github.com:redhat-actions/openshift-actions-runner-chart.git \
 && cd openshift-actions-runner-chart
 ```
 4. Install the helm chart, which creates a deployment and a secret. Leave out `githubRepository` if you want an organization-scoped runner.
+    - Add the `--namespace` argument to all `helm` and `kubectl/oc` commands if you want to use a namespace other than your current context's namespace.
 
 ```bash
-# PAT from step 2. Be careful about exporting this into your shell and history.
+# PAT from step 2.
 export GITHUB_PAT=c0ffeeface1234567890
 # For an org runner, this is the org.
-# For a repo runner, this is the repo owner.
+# For a repo runner, this is the repo owner (org or user).
 export GITHUB_OWNER=redhat-actions
-# For an org runner, omit this argument (or leave it blank).
+# For an org runner, omit this argument.
 # For a repo runner, the repo name.
 export GITHUB_REPO=openshift-actions-runner-chart
 # Helm release name to use.
@@ -53,8 +59,25 @@ For other configuration options such as resource limits and replica counts, see 
 
 The runners should show up under `Settings > Actions > Self-hosted runners` shortly afterward.
 
-## Creating your own runner image
+## Using your own runner image
 See the [OpenShift Actions Runner README](https://github.com/redhat-actions/openshift-action-runners#README.md).
 
 ## Managing PATs
 See [the wiki](https://github.com/redhat-actions/openshift-actions-runner-chart/wiki/Managing-PATs) for a note on managing mulitple PATs, if you want to add a new PAT or replace an existing one.
+
+## Troubleshooting
+The runner containers will crash with an authorization/authentication error (HTTP 401 or 403) if the GitHub PAT they are given is not valid, or does not have the required permission scope. Make sure the `githubPat` input value contains a token that has the required permission scopes, as outlined in [Step 2](#pat-guidelines).
+
+The runner containers will crash with an HTTP 404 if the org, user, or repository name is misspelled, or not visible with the token's permissions.
+
+### General guidelines for troubleshooting
+
+You can view the resources created by Helm using `helm get manifest $RELEASE_NAME`, and then inspect those resources using `kubectl get`.
+
+The resources are also labeled with `app.kubernetes.io/instance={{ .Release.Name }}`, so you can view all the resources with:
+
+```sh
+kubectl get all,secret -l=app.kubernetes.io/instance=$RELEASE_NAME
+```
+
+If the pods are created but stuck in a crash loop, view the logs with `kubectl logs <podname>` to see the problem.
