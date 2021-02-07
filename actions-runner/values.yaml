@@ -34,9 +34,20 @@ cpuLimit: "250m"
 # Running as root is still not allowed by the deploy,ent.
 privileged: false
 
+# Enable custom cluster PKI loading
+# https://docs.openshift.com/container-platform/4.6/networking/configuring-a-custom-pki.html
+clusterPKI: false
+
 # You can inject arbitrary environment variables here:
 runnerEnv:
     # - name: ENV_VAR
     #   value: env_value
     # or, through the command line:
     # --set runnerEnv[0].name="ENV_VAR" --set runnerEnv[0].value="env_value"
+    # Proxy Configuration Example:
+    # - name: https_proxy
+    #   value: http://proxy.example.com:9000
+    # - name: http_proxy
+    #   value: http://proxy.example.com:9000
+    # - name: no_proxy
+    #   value: localhost

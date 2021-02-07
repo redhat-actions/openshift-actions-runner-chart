@@ -84,3 +84,22 @@ spec:
             - name: {{ .name }}
               value: {{ .value }}
         {{- end }}
+          # Enable custom cluster PKI
+          # https://docs.openshift.com/container-platform/4.6/networking/configuring-a-custom-pki.html
+          {{ if .Values.clusterPKI }}
+          volumeMounts: 
+            - name: trusted-ca
+              mountPath: /etc/pki/ca-trust/extracted/pem
+              readOnly: true 
+          {{ end }}   
+
+      # Enable custom cluster PKI - Volumes
+      {{ if .Values.clusterPKI }}
+      volumes: 
+        - name: trusted-ca
+          configMap:
+            name: trusted-ca
+            items:
+              - key: ca-bundle.crt 
+                path: tls-ca-bundle.pem 
+      {{end}}
