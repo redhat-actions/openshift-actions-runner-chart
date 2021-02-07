@@ -44,7 +44,8 @@ runnerEnv:
     #   value: env_value
     # or, through the command line:
     # --set runnerEnv[0].name="ENV_VAR" --set runnerEnv[0].value="env_value"
-    # Proxy Configuration Example:
+
+    ## Proxy Configuration Example:
     # - name: https_proxy
     #   value: http://proxy.example.com:9000
     # - name: http_proxy
