@@ -3,48 +3,77 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}
   labels:
-    app.kubernetes.io/component: "deployment"
+    # https://helm.sh/docs/chart_best_practices/labels/
+    app.kubernetes.io/component: deployment
+    # DO NOT edit the instance label, it is used by the runner installer action to find the installed pod.
     app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/name: {{ .Release.Name }}
-    app.kubernetes.io/part-of: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/name: {{ .Values.appName }}
     app.kubernetes.io/version: {{ .Chart.Version | quote }}
-    meta.helm.sh/release-name: {{ .Release.Name }},
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/part-of: {{ .Release.Name }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   replicas: {{ .Values.replicas }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/part-of: {{ .Release.Name }}
+        # DO NOT edit the instance label, it is used by the runner installer action to find the installed pod.
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       securityContext:
         runAsNonRoot: true
+      volumes:
+        - emptyDir: {}
+          name: runner-work
+        - emptyDir: {}
+          name: runner-diag
       containers:
         - name: {{ .Release.Name }}
+          imagePullPolicy: Always
 
           {{- $taggedImage := printf "%s:%s" .Values.runnerImage .Values.runnerTag }}
           image: {{ $taggedImage }}
 
           securityContext:
             privileged: {{ .Values.privileged }}
+            # readOnlyRootFilesystem: true
 
           resources:
+            requests:
+              memory: {{ .Values.memoryRequest }}
+              cpu: {{ .Values.cpuRequest }}
             limits:
               memory: {{ .Values.memoryLimit }}
               cpu: {{ .Values.cpuLimit }}
 
+          # Wait until the runner service is actually listening before the pod goes into the Ready state.
+          # The entrypoint script takes 5-10s to connect to GitHub and start listening for jobs.
+          # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#probe-v1-core
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 1
+            exec:
+              command:
+                - pgrep
+                - Runner.Listener
+
+          volumeMounts:
+            - name: runner-work
+              mountPath: /home/runner/_work
+            - name: runner-diag
+              mountPath: /home/runner/_diag
 
           env:
             - name: GITHUB_OWNER
               value: {{ required ".Values.githubOwner must be set." .Values.githubOwner }}
             - name: GITHUB_REPOSITORY
               value: {{ .Values.githubRepository }}
+              # The labels must be trimmed. The config script will stop reading labels if it encounters a space.
             - name: RUNNER_LABELS
-              value: {{ $taggedImage }},{{- range .Values.runnerLabels }}{{trim .}},{{- end}}
+              value: "{{ $taggedImage }},{{- range .Values.runnerLabels }}{{trim .}},{{- end}}"
             - name: GITHUB_PAT
               valueFrom:
                 secretKeyRef:

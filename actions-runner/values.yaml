@@ -1,7 +1,7 @@
 appName: actions-runner
 
 runnerImage: quay.io/redhat-github-actions/runner
-runnerTag: v0.1
+runnerTag: v1.0.0
 
 githubOwner: ""
 githubRepository: ""
@@ -18,12 +18,16 @@ githubPat: ""
 # --set runnerLabels="{ label1, label2 }" results in the labels "label1" and "label2".
 runnerLabels: []
 
-# Adjust replicas and limits accordingly, depending on your resources available,
-# how many jobs you want to run concurrently,
-# and how much processing power your workflows require.
+# Adjust replicas depending on your resources available,
+# and how many jobs you want to run concurrently.
 replicas: 1
-memoryLimit: "1Gi"
-cpuLimit: "500m"
+
+# Adjust requests and limits depending on your resources,
+# and how heavyweight your workloads are.
+memoryRequest: "1Gi"
+memoryLimit: "2Gi"
+cpuRequest: "100m"
+cpuLimit: "250m"
 
 # If you have administrator privileges and understand the security implications of privileged containers,
 # set this to true to easily get buildah and podman working, among other things.
