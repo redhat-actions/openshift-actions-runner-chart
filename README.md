@@ -20,10 +20,7 @@ You can install runners into your cluster using the Helm chart in this repositor
 
 1. Runners can be scoped to an **organization** or a **repository**. Decide what the scope of your runner will be.
     - User-scoped runners are not supported by GitHub.
-<a id="pat-guidelines"></a>
-2. [Create a GitHub Personal Access Token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) (PAT) which has the `repo` permission scope.
-    - The user who created the token must have administrator permission on the repository/organization the runner will be added to.
-    - If the runner will be for an organization, the token must also have the `admin:org` permission scope.
+2. Create a GitHub Personal Access Token as per the instructions in the [runner image README](https://github.com/redhat-actions/openshift-actions-runner#pat-guidelines).
     - The default `secrets.GITHUB_TOKEN` **does not** have permission to manage self-hosted runners. See [Permissions for the GITHUB_TOKEN](https://docs.github.com/en/actions/reference/authentication-in-a-workflow#permissions-for-the-github_token).
 3. Clone this repository and `cd` into it:
 ```bash
@@ -66,12 +63,6 @@ See the [OpenShift Actions Runner README](https://github.com/redhat-actions/open
 See [the wiki](https://github.com/redhat-actions/openshift-actions-runner-chart/wiki/Managing-PATs) for a note on managing mulitple PATs, if you want to add a new PAT or replace an existing one.
 
 ## Troubleshooting
-The runner containers will crash with an authorization/authentication error (HTTP 401 or 403) if the GitHub PAT they are given is not valid, or does not have the required permission scope. Make sure the `githubPat` input value contains a token that has the required permission scopes, as outlined in [Step 2](#pat-guidelines).
-
-The runner containers will crash with an HTTP 404 if the org, user, or repository name is misspelled, or not visible with the token's permissions.
-
-### General guidelines for troubleshooting
-
 You can view the resources created by Helm using `helm get manifest $RELEASE_NAME`, and then inspect those resources using `kubectl get`.
 
 The resources are also labeled with `app.kubernetes.io/instance={{ .Release.Name }}`, so you can view all the resources with:
@@ -80,4 +71,4 @@ The resources are also labeled with `app.kubernetes.io/instance={{ .Release.Name
 kubectl get all,secret -l=app.kubernetes.io/instance=$RELEASE_NAME
 ```
 
-If the pods are created but stuck in a crash loop, view the logs with `kubectl logs <podname>` to see the problem.
+If the pods are created but stuck in a crash loop, view the logs with `kubectl logs <podname>` to see the problem. Refer to the [runner container troubleshooting](https://github.com/redhat-actions/openshift-actions-runner#troubleshooting) to resolve any issues.
