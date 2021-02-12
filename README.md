@@ -5,7 +5,8 @@
 [![Tag](https://img.shields.io/github/v/tag/redhat-actions/openshift-actions-runner-chart)](https://github.com/redhat-actions/openshift-actions-runner-chart/tags)
 [![Quay org](https://img.shields.io/badge/quay-redhat--github--actions-red)](https://quay.io/organization/redhat-github-actions)
 
-This repository contains a Helm chart for deploying one or more self-hosted [GitHub Actions Runners]((https://docs.github.com/en/free-pro-team@latest/actions/hosting-your-own-runners/about-self-hosted-runners)) into a Kubernetes cluster. By default, the container image used is the [**OpenShift Actions Runner**](https://github.com/redhat-actions/openshift-actions-runner).
+This repository contains a Helm chart for deploying one or more self-hosted <!-- markdown-link-check-disable --> [GitHub Actions Runners]((https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners)) <!-- markdown-link-check-enable -->
+into a Kubernetes cluster. By default, the container image used is the [**OpenShift Actions Runner**](https://github.com/redhat-actions/openshift-actions-runner).
 
 You can deploy runners automatically using the [**Self Hosted Runner Installer Action**](https://github.com/redhat-actions/self-hosted-runner-installer).
 
@@ -13,6 +14,7 @@ You can deploy runners automatically using the [**Self Hosted Runner Installer A
 You must have access to a Kubernetes cluster. Visit [openshift.com/try](https://www.openshift.com/try) or sign up for our [Developer Sandbox](https://developers.redhat.com/developer-sandbox).
 
 You do **not** need cluster administrator privileges to deploy the runners and run workloads, though some images or tools may require special permissions.
+
 
 ## Installing runners
 
@@ -52,12 +54,16 @@ helm install $RELEASE_NAME ./actions-runner/ \
 
 5. You can re-run step 4 if you want to add runners with different images, labels, etc. You can leave out the `githubPat` on subsequent runs, since the secret will be left out if it exists already.
 
-For other configuration options such as resource limits and replica counts, see [`values.yaml`](./actions-runner/values.yaml).
-
 The runners should show up under `Settings > Actions > Self-hosted runners` shortly afterward.
 
+## Values
+
+You can override the default values such as resource limits and replica counts or inject environment variables by passing `--set` or `--set-string` to the `helm install` command.
+
+Refer to the [`values.yaml`](./actions-runner/values.yaml) for values that can be overridden.
+
 ## Using your own runner image
-See the [OpenShift Actions Runner README](https://github.com/redhat-actions/openshift-action-runners#README.md).
+See the [OpenShift Actions Runner README](https://github.com/redhat-actions/openshift-actions-runner#README.md).
 
 ## Managing PATs
 See [the wiki](https://github.com/redhat-actions/openshift-actions-runner-chart/wiki/Managing-PATs) for a note on managing mulitple PATs, if you want to add a new PAT or replace an existing one.
