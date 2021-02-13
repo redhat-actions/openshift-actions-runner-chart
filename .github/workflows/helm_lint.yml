@@ -1,12 +1,10 @@
 name: Helm Lint
 on:
   push:
-    branches: [ "*" ]
-    tags: [ "*" ]
   pull_request:
 
 env:
-  CHART_DIR: actions-runner
+  CHART_DIR: .
 
 jobs:
   helm_lint:
