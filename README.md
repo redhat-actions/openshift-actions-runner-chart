@@ -1,6 +1,8 @@
 # OpenShift GitHub Actions Runner Chart
 
 [![Helm Lint](https://github.com/redhat-actions/openshift-actions-runner-chart/workflows/Helm%20Lint/badge.svg)](https://github.com/redhat-actions/openshift-actions-runner-chart/actions)
+[![Link checker](https://github.com/redhat-actions/openshift-actions-runner-chart/workflows/Link%20checker/badge.svg)](https://github.com/redhat-actions/openshift-actions-runner-chart/actions)
+[![Publish chart to Pages](https://github.com/redhat-actions/openshift-actions-runner-chart/workflows/Publish%20chart%20to%20Pages/badge.svg)](https://github.com/redhat-actions/openshift-actions-runner-chart/actions)
 
 [![Tag](https://img.shields.io/github/v/tag/redhat-actions/openshift-actions-runner-chart)](https://github.com/redhat-actions/openshift-actions-runner-chart/tags)
 [![Quay org](https://img.shields.io/badge/quay-redhat--github--actions-red)](https://quay.io/organization/redhat-github-actions)
@@ -18,6 +20,14 @@ You must have access to a Kubernetes cluster. Visit [openshift.com/try](https://
 You must have Helm 3 installed.
 
 You do **not** need cluster administrator privileges to deploy the runners and run workloads. However, some images or tools may require special permissions.
+
+## Helm repository
+This GitHub repository serves a Helm repository through GitHub Pages.
+
+The repository can be added with:
+```
+helm repo add openshift-actions-runner https://redhat-actions.github.io/openshift-actions-runner-chart
+```
 
 ## Installing runners
 
