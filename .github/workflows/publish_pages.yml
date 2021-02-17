@@ -1,4 +1,4 @@
-name: Publish Chart to Pages
+name: Publish chart to Pages
 on:
   push:
     tags:
