@@ -8,13 +8,16 @@
 This repository contains a Helm chart for deploying one or more self-hosted <!-- markdown-link-check-disable --> [GitHub Actions Runners]((https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners)) <!-- markdown-link-check-enable -->
 into a Kubernetes cluster. By default, the container image used is the [**OpenShift Actions Runner**](https://github.com/redhat-actions/openshift-actions-runner).
 
-You can deploy runners automatically using the [**Self Hosted Runner Installer Action**](https://github.com/redhat-actions/self-hosted-runner-installer).
+You can deploy runners automatically in an Actions workflow using the [**OpenShift Actions Runner Installer**](https://github.com/redhat-actions/openshift-actions-runner-installer).
+
+While this chart and the images are developed for and tested on OpenShift, they do not contain any OpenShift specific code and should be compatible with any Kubernetes platform.
 
 ## Prerequisites
 You must have access to a Kubernetes cluster. Visit [openshift.com/try](https://www.openshift.com/try) or sign up for our [Developer Sandbox](https://developers.redhat.com/developer-sandbox).
 
-You do **not** need cluster administrator privileges to deploy the runners and run workloads, though some images or tools may require special permissions.
+You must have Helm 3 installed.
 
+You do **not** need cluster administrator privileges to deploy the runners and run workloads. However, some images or tools may require special permissions.
 
 ## Installing runners
 
@@ -24,10 +27,11 @@ You can install runners into your cluster using the Helm chart in this repositor
     - User-scoped runners are not supported by GitHub.
 2. Create a GitHub Personal Access Token as per the instructions in the [runner image README](https://github.com/redhat-actions/openshift-actions-runner#pat-guidelines).
     - The default `secrets.GITHUB_TOKEN` **does not** have permission to manage self-hosted runners. See [Permissions for the GITHUB_TOKEN](https://docs.github.com/en/actions/reference/authentication-in-a-workflow#permissions-for-the-github_token).
-3. Clone this repository and `cd` into it:
+3. Add this repository as a Helm repository.
 ```bash
-git clone git@github.com:redhat-actions/openshift-actions-runner-chart.git \
-&& cd openshift-actions-runner-chart
+helm repo add openshift-actions-runner \
+    https://redhat-actions.github.io/openshift-actions-runner-chart \
+&& helm repo update
 ```
 4. Install the helm chart, which creates a deployment and a secret. Leave out `githubRepository` if you want an organization-scoped runner.
     - Add the `--namespace` argument to all `helm` and `kubectl/oc` commands if you want to use a namespace other than your current context's namespace.
@@ -44,15 +48,14 @@ export GITHUB_REPO=openshift-actions-runner-chart
 # Helm release name to use.
 export RELEASE_NAME=actions-runner
 
-helm install $RELEASE_NAME ./actions-runner/ \
+helm install $RELEASE_NAME openshift-actions-runner/actions-runner \
     --set-string githubPat=$GITHUB_PAT \
     --set-string githubOwner=$GITHUB_OWNER \
     --set-string githubRepository=$GITHUB_REPO \
 && echo "---------------------------------------" \
 && helm get manifest $RELEASE_NAME | kubectl get -f -
 ```
-
-5. You can re-run step 4 if you want to add runners with different images, labels, etc. You can leave out the `githubPat` on subsequent runs, since the secret will be left out if it exists already.
+5. You can re-run step 4 if you want to add runners with different images, labels, etc. You can leave out the `githubPat` on subsequent runs, since it will re-use an existing secret will be left out if it exists already.
 
 The runners should show up under `Settings > Actions > Self-hosted runners` shortly afterward.
 
@@ -60,7 +63,7 @@ The runners should show up under `Settings > Actions > Self-hosted runners` shor
 
 You can override the default values such as resource limits and replica counts or inject environment variables by passing `--set` or `--set-string` to the `helm install` command.
 
-Refer to the [`values.yaml`](./actions-runner/values.yaml) for values that can be overridden.
+Refer to the [`values.yaml`](./values.yaml) for values that can be overridden.
 
 ## Using your own runner image
 See the [OpenShift Actions Runner README](https://github.com/redhat-actions/openshift-actions-runner#README.md).
