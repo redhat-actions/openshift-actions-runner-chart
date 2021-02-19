@@ -17,6 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Helm lint
+        run: helm lint ${{ env.CHART_SRC_DIR }}
+
       - uses: redhat-actions/common/commit-data@v1
         id: commit_data
 
