@@ -76,7 +76,16 @@ You can override the default values such as resource limits and replica counts o
 Refer to the [`values.yaml`](./values.yaml) for values that can be overridden.
 
 ## Using your own runner image
-Refer [Building your own runner image](https://github.com/redhat-actions/openshift-actions-runner/tree/main/base#own-image).
+Refer to [Building your own runner image](https://github.com/redhat-actions/openshift-actions-runner/tree/main/base#own-image) for instructions on how to build a runner.
+
+Then, use
+
+```
+--set runnerImage=your-registry.io/username/image \
+--set runnerTag=your-tag
+```
+
+to use your image instead of the chart's default.
 
 ## GitHub Enterprise Support
 Use `--set githubDomain=github.mycompany.com`.
