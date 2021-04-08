@@ -29,6 +29,8 @@ spec:
           name: runner-work
         - emptyDir: {}
           name: runner-diag
+        - emptyDir: {}
+          name: containers
         # Enable custom cluster PKI
         # https://docs.openshift.com/container-platform/4.6/networking/configuring-a-custom-pki.html
         {{- if .Values.clusterPKI }}
@@ -76,6 +78,8 @@ spec:
               mountPath: /home/runner/_work
             - name: runner-diag
               mountPath: /home/runner/_diag
+            - name: containers
+              mountPath: /var/lib/containers
             {{- if .Values.clusterPKI }}
             - name: trusted-ca
               mountPath: /etc/pki/ca-trust/extracted/pem
@@ -87,9 +91,13 @@ spec:
               value: {{ required ".Values.githubOwner must be set." .Values.githubOwner }}
             - name: GITHUB_REPOSITORY
               value: {{ .Values.githubRepository }}
-              # The labels must be trimmed. The config script will stop reading labels if it encounters a space.
+            - name: GITHUB_DOMAIN
+              value: {{ .Values.githubDomain }}
+
+            # The labels must be trimmed. The config script will stop reading labels if it encounters a space.
             - name: RUNNER_LABELS
               value: "{{ $taggedImage }},{{- range .Values.runnerLabels }}{{trim .}},{{- end}}"
+
             - name: GITHUB_PAT
               valueFrom:
                 secretKeyRef:

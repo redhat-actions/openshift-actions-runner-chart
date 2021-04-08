@@ -13,4 +13,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - run: helm lint ${{ env.CHART_DIR }}
+
+      - uses: stackrox/kube-linter-action@v1
+        with:
+          directory: .
+          config: kube-linter.config.yml
