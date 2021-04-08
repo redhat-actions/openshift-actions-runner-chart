@@ -91,9 +91,13 @@ spec:
               value: {{ required ".Values.githubOwner must be set." .Values.githubOwner }}
             - name: GITHUB_REPOSITORY
               value: {{ .Values.githubRepository }}
-              # The labels must be trimmed. The config script will stop reading labels if it encounters a space.
+            - name: GITHUB_DOMAIN
+              value: {{ .Values.githubDomain }}
+
+            # The labels must be trimmed. The config script will stop reading labels if it encounters a space.
             - name: RUNNER_LABELS
               value: "{{ $taggedImage }},{{- range .Values.runnerLabels }}{{trim .}},{{- end}}"
+
             - name: GITHUB_PAT
               valueFrom:
                 secretKeyRef:

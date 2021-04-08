@@ -5,6 +5,9 @@ runnerTag: v1.0.0
 
 githubOwner: ""
 githubRepository: ""
+# If you're using GitHub Enterprise, enter your company domain here.
+# eg. github.mycompany.com
+githubDomain: ""
 
 # The name of the k8s secret to create.
 secretName: "github-pat"
