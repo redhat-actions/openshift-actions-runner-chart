@@ -76,7 +76,12 @@ You can override the default values such as resource limits and replica counts o
 Refer to the [`values.yaml`](./values.yaml) for values that can be overridden.
 
 ## Using your own runner image
-See the [OpenShift Actions Runner README](https://github.com/redhat-actions/openshift-actions-runner#README.md).
+Refer [Building your own runner image](https://github.com/redhat-actions/openshift-actions-runner/tree/main/base#own-image).
+
+## GitHub Enterprise Support
+Use `--set githubDomain=github.mycompany.com`.
+
+Refer to the [OpenShift Actions Runner README](https://github.com/redhat-actions/openshift-actions-runner#enterprise-support).
 
 ## Managing PATs
 See [the wiki](https://github.com/redhat-actions/openshift-actions-runner-chart/wiki/Managing-PATs) for a note on managing mulitple PATs, if you want to add a new PAT or replace an existing one.
