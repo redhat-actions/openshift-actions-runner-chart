@@ -1,4 +1,0 @@
-checks:
-  addAllBuiltIn: true
-  exclude:
-  - "no-read-only-root-fs"

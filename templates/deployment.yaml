@@ -22,15 +22,11 @@ spec:
         # DO NOT edit the instance label, it is used by the runner installer action to find the installed pod.
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      serviceAccountName: {{ .Values.serviceAccountName }}
       securityContext:
         runAsNonRoot: true
+
       volumes:
-        - emptyDir: {}
-          name: runner-work
-        - emptyDir: {}
-          name: runner-diag
-        - emptyDir: {}
-          name: containers
         # Enable custom cluster PKI
         # https://docs.openshift.com/container-platform/4.6/networking/configuring-a-custom-pki.html
         {{- if .Values.clusterPKI }}
@@ -49,9 +45,32 @@ spec:
           {{- $taggedImage := printf "%s:%s" .Values.runnerImage .Values.runnerTag }}
           image: {{ $taggedImage }}
 
+          env:
+            - name: GITHUB_OWNER
+              value: {{ required ".Values.githubOwner must be set." .Values.githubOwner }}
+            - name: GITHUB_REPOSITORY
+              value: {{ .Values.githubRepository }}
+            - name: GITHUB_DOMAIN
+              value: {{ .Values.githubDomain }}
+
+            # The labels must be trimmed. The config script will stop reading labels if it encounters a space.
+            - name: RUNNER_LABELS
+              value: "{{ $taggedImage }},{{- range .Values.runnerLabels }}{{trim .}},{{- end}}"
+
+            - name: GITHUB_PAT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secretName }}
+                  key: {{ .Values.secretKey }}
+
+              # Any injected env values from values.yaml will go here
+              {{- range .Values.runnerEnv }}
+            - name: {{ .name }}
+              value: {{ .value }}
+        {{- end }}
+
           securityContext:
-            privileged: {{ .Values.privileged }}
-            # readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
 
           resources:
             requests:
@@ -74,37 +93,8 @@ spec:
                 - Runner.Listener
 
           volumeMounts:
-            - name: runner-work
-              mountPath: /home/runner/_work
-            - name: runner-diag
-              mountPath: /home/runner/_diag
-            - name: containers
-              mountPath: /var/lib/containers
             {{- if .Values.clusterPKI }}
             - name: trusted-ca
               mountPath: /etc/pki/ca-trust/extracted/pem
               readOnly: true
             {{- end }}
-
-          env:
-            - name: GITHUB_OWNER
-              value: {{ required ".Values.githubOwner must be set." .Values.githubOwner }}
-            - name: GITHUB_REPOSITORY
-              value: {{ .Values.githubRepository }}
-            - name: GITHUB_DOMAIN
-              value: {{ .Values.githubDomain }}
-
-            # The labels must be trimmed. The config script will stop reading labels if it encounters a space.
-            - name: RUNNER_LABELS
-              value: "{{ $taggedImage }},{{- range .Values.runnerLabels }}{{trim .}},{{- end}}"
-
-            - name: GITHUB_PAT
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.secretName }}
-                  key: {{ .Values.secretKey }}
-            # Any injected env values from values.yaml will go below
-              {{- range .Values.runnerEnv }}
-            - name: {{ .name }}
-              value: {{ .value }}
-        {{- end }}
