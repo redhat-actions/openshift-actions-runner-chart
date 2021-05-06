@@ -70,7 +70,6 @@ spec:
         {{- end }}
 
           securityContext:
-            allowPrivilegeEscalation: false
 
           resources:
             requests:
