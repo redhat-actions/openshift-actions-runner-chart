@@ -58,6 +58,8 @@ export GITHUB_REPO=openshift-actions-runner-chart
 # Helm release name to use.
 export RELEASE_NAME=actions-runner
 
+# If you cloned the repository (eg. to edit the chart)
+# replace openshift-actions-runner/actions-runner with the directory containing Chart.yaml.
 helm install $RELEASE_NAME openshift-actions-runner/actions-runner \
     --set-string githubPat=$GITHUB_PAT \
     --set-string githubOwner=$GITHUB_OWNER \
@@ -76,16 +78,7 @@ You can override the default values such as resource limits and replica counts o
 Refer to the [`values.yaml`](./values.yaml) for values that can be overridden.
 
 ## Using your own runner image
-Refer to [Building your own runner image](https://github.com/redhat-actions/openshift-actions-runner/tree/main/base#own-image) for instructions on how to build a runner.
-
-Then, use
-
-```
---set runnerImage=your-registry.io/username/image \
---set runnerTag=your-tag
-```
-
-to use your image instead of the chart's default.
+Refer [Building your own runner image](https://github.com/redhat-actions/openshift-actions-runner/tree/main/base#own-image).
 
 ## GitHub Enterprise Support
 Use `--set githubDomain=github.mycompany.com`.

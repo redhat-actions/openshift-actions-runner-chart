@@ -3,7 +3,10 @@ appName: actions-runner
 runnerImage: quay.io/redhat-github-actions/runner
 runnerTag: v1.0.0
 
+# GitHub organization or user. Required.
+# If githubRepository is set, this must be the organization or user who owns that repository.
 githubOwner: ""
+# GitHub repository to install runners to. Can be omitted for an organization-level runner.
 githubRepository: ""
 # If you're using GitHub Enterprise, enter your company domain here.
 # eg. github.mycompany.com
@@ -25,17 +28,14 @@ runnerLabels: []
 # and how many jobs you want to run concurrently.
 replicas: 1
 
+serviceAccountName: default
+
 # Adjust requests and limits depending on your resources,
 # and how heavyweight your workloads are.
 memoryRequest: "512Mi"
 memoryLimit: "1Gi"
 cpuRequest: "100m"
 cpuLimit: "250m"
-
-# If you have administrator privileges and understand the security implications of privileged containers,
-# set this to true to easily get buildah and podman working, among other things.
-# Running as root is still not allowed by the deploy,ent.
-privileged: false
 
 # Enable custom cluster PKI loading
 # https://docs.openshift.com/container-platform/4.6/networking/configuring-a-custom-pki.html
