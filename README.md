@@ -45,6 +45,8 @@ helm repo add openshift-actions-runner \
     https://redhat-actions.github.io/openshift-actions-runner-chart \
 && helm repo update
 ```
+You can also clone this repository and reference the chart's directory. This allows you to modify the chart if necessary.
+
 4. Install the helm chart, which creates a deployment and a secret. Leave out `githubRepository` if you want an organization-scoped runner.
     - Add the `--namespace` argument to all `helm` and `kubectl/oc` commands if you want to use a namespace other than your current context's namespace.
 
