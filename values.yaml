@@ -1,7 +1,7 @@
 appName: actions-runner
 
 runnerImage: quay.io/redhat-github-actions/runner
-runnerTag: v1.0.0
+runnerTag: v1
 
 # GitHub organization or user. Required.
 # If githubRepository is set, this must be the organization or user who owns that repository.
