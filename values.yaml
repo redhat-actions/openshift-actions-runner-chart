@@ -1,7 +1,7 @@
 appName: actions-runner
 
 runnerImage: quay.io/redhat-github-actions/runner
-runnerTag: v1.0.0
+runnerTag: v1
 
 # GitHub organization or user. Required.
 # If githubRepository is set, this must be the organization or user who owns that repository.
@@ -23,6 +23,12 @@ githubPat: ""
 # Pass labels using array syntax, which is curly braces surrounding comma-separated items.
 # --set runnerLabels="{ label1, label2 }" results in the labels "label1" and "label2".
 runnerLabels: []
+
+# Add annotations to the deployment. This is easist with a values file but can be done on the command line with:
+# --set annotations.<key>=<value> is equivalent to the values file:
+# annotations:
+#   key: value
+annotations: {}
 
 # Adjust replicas depending on your resources available,
 # and how many jobs you want to run concurrently.

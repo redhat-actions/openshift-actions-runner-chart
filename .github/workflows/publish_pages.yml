@@ -23,6 +23,17 @@ jobs:
       - uses: redhat-actions/common/commit-data@v1
         id: commit_data
 
+      - uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          source: github
+          github_pat: ${{ github.token }}
+          yq: latest
+
+      - uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          source: mirror
+          helm: latest
+
       - name: Get tag
         shell: bash
         run: |
@@ -32,10 +43,11 @@ jobs:
           fi
           echo "TAG=$TAG" >> $GITHUB_ENV
 
+      - name: Get Chart.yaml path
+        run: echo "CHART_YAML=${{ env.CHART_SRC_DIR }}/Chart.yaml" | tee -a $GITHUB_ENV
+
       - name: Update Chart.yaml version
-        uses: mikefarah/yq@v4.5.1
-        with:
-          cmd: yq -ei e '.version = "${{ env.TAG }}"' Chart.yaml
+        run: yq -ei e '.version = "${{ env.TAG }}"' Chart.yaml
 
       - name: Package Helm Chart
         shell: bash
