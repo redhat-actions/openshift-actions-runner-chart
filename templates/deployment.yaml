@@ -61,11 +61,29 @@ spec:
             - name: RUNNER_LABELS
               value: "{{ $taggedImage }},{{- range .Values.runnerLabels }}{{trim .}},{{- end}}"
 
+            {{- if .Values.githubAppId }}
+            - name: GITHUB_APP_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.appSecretName }}
+                  key: {{ .Values.appIdSecretKey}}
+            - name: GITHUB_APP_INSTALL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.appSecretName }}
+                  key: {{ .Values.appInstallIdSecretKey}}
+            - name: GITHUB_APP_PEM
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.appSecretName }}
+                  key: {{ .Values.appPemSecretKey}}
+            {{- else }}
             - name: GITHUB_PAT
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secretName }}
-                  key: {{ .Values.secretKey }}
+                  name: {{ .Values.patSecretName }}
+                  key: {{ .Values.patSecretKey }}
+            {{- end}}
 
               # Any injected env values from values.yaml will go here
               {{- range .Values.runnerEnv }}
