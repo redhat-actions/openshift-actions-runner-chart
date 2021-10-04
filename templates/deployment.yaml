@@ -81,8 +81,8 @@ spec:
             - name: GITHUB_PAT
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.SecretName }}
-                  key: {{ .Values.SecretKey }}
+                  name: {{ .Values.secretName }}
+                  key: {{ .Values.secretKey }}
             {{- end}}
 
               # Any injected env values from values.yaml will go here
