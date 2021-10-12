@@ -20,6 +20,7 @@ secretKey: "github-pat"
 # The PAT itself - must be set if the secret is being created.
 githubPat: ""
 
+
 # The name of the Github App k8s secret to create.
 appSecretName: "github-app"
 # The name of the key that points to the Github App ID

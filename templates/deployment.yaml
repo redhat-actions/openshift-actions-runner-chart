@@ -77,7 +77,8 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.appSecretName }}
                   key: {{ .Values.appPemSecretKey}}
-            {{- else }}
+            {{- end}}
+            {{- if .Values.githubPat }}
             - name: GITHUB_PAT
               valueFrom:
                 secretKeyRef:
