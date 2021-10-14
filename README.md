@@ -37,8 +37,14 @@ You can install runners into your cluster using the Helm chart in this repositor
 
 1. Runners can be scoped to an **organization** or a **repository**. Decide what the scope of your runner will be.
     - User-scoped runners are not supported by GitHub.
-2. Create a GitHub Personal Access Token as per the instructions in the [runner image README](https://github.com/redhat-actions/openshift-actions-runner#pat-guidelines).
-    - The default `secrets.GITHUB_TOKEN` **does not** have permission to manage self-hosted runners. See [Permissions for the GITHUB_TOKEN](https://docs.github.com/en/actions/reference/authentication-in-a-workflow#permissions-for-the-github_token).
+2. Determine how you will authorize the runner creation in GitHub. Choose one of the following:
+
+    a. Create a GitHub Personal Access Token as per the PAT instructions in the [runner image README](https://github.com/redhat-actions/openshift-actions-runner#pat-guidelines).
+
+    b. Create a GitHub App and install into your org or user account as per the app instructions in the [runner image README](https://github.com/redhat-actions/openshift-actions-runners/blob/main/docs/github-app-authentication.md).
+
+- Note that the default `secrets.GITHUB_TOKEN` **does not** have permission to manage self-hosted runners. See [Permissions for the GITHUB_TOKEN](https://docs.github.com/en/actions/reference/authentication-in-a-workflow#permissions-for-the-github_token).
+
 3. Add this repository as a Helm repository.
 ```bash
 helm repo add openshift-actions-runner \
@@ -51,8 +57,14 @@ You can also clone this repository and reference the chart's directory. This all
     - Add the `--namespace` argument to all `helm` and `kubectl/oc` commands if you want to use a namespace other than your current context's namespace.
 
 ```bash
-# PAT from step 2.
+# Authorization from Step 2:
+# Either GITHUB_PAT, OR all 3 of GITHUB_APP_*
 export GITHUB_PAT=c0ffeeface1234567890
+# OR, GitHub App information:
+export GITHUB_APP_ID=123456
+export GITHUB_APP_INSTALL_ID=7890123
+export GITHUB_APP_PEM='----------BEGIN RSA PRIVATE KEY...'
+
 # For an org runner, this is the org.
 # For a repo runner, this is the repo owner (org or user).
 export GITHUB_OWNER=redhat-actions
@@ -63,15 +75,28 @@ export GITHUB_REPO=openshift-actions-runner-chart
 export RELEASE_NAME=actions-runner
 
 # If you cloned the repository (eg. to edit the chart)
-# replace openshift-actions-runner/actions-runner with the directory containing Chart.yaml.
+# replace openshift-actions-runner/actions-runner below with the directory containing Chart.yaml.
+
+# Installing using PAT Auth
 helm install $RELEASE_NAME openshift-actions-runner/actions-runner \
     --set-string githubPat=$GITHUB_PAT \
     --set-string githubOwner=$GITHUB_OWNER \
     --set-string githubRepository=$GITHUB_REPO \
 && echo "---------------------------------------" \
 && helm get manifest $RELEASE_NAME | kubectl get -f -
+
+# OR, Installing using App Auth
+helm install $RELEASE_NAME openshift-actions-runner/actions-runner \
+    --set-string githubAppId=$GITHUB_APP_ID \
+    --set-string githubAppInstallId=$GITHUB_APP_INSTALL_ID \
+    --set-string githubAppPem="$GITHUB_APP_PEM" \
+    --set-string githubOwner=$GITHUB_OWNER \
+    --set-string githubRepository=$GITHUB_REPO \
+&& echo "---------------------------------------" \
+&& helm get manifest $RELEASE_NAME | kubectl get -f -
 ```
-5. You can re-run step 4 if you want to add runners with different images, labels, etc. You can leave out the `githubPat` on subsequent runs, since it will re-use an existing secret will be left out if it exists already.
+5. You can re-run step 4 if you want to add runners with different images, labels, etc. You can leave out the `githubPat` or `githubApp*` strings on subsequent runs, since the chart will re-use an existing secret.
+
 
 The runners should show up under `Settings > Actions > Self-hosted runners` shortly afterward.
 
@@ -82,7 +107,7 @@ You can override the default values such as resource limits and replica counts o
 Refer to the [`values.yaml`](./values.yaml) for values that can be overridden.
 
 ## Using your own runner image
-Refer [Building your own runner image](https://github.com/redhat-actions/openshift-actions-runner/tree/main/base#own-image).
+Refer to [Building your own runner image](https://github.com/redhat-actions/openshift-actions-runner/tree/main/base#own-image).
 
 ## GitHub Enterprise Support
 Use `--set githubDomain=github.mycompany.com`.

@@ -59,13 +59,35 @@ spec:
 
             # The labels must be trimmed. The config script will stop reading labels if it encounters a space.
             - name: RUNNER_LABELS
-              value: "{{ $taggedImage }},{{- range .Values.runnerLabels }}{{trim .}},{{- end}}"
+              value: "{{ $taggedImage }},{{- range .Values.runnerLabels }}{{trim .}},{{- end }}"
 
+            # App Auth
+            {{- if .Values.githubAppId }}
+            - name: GITHUB_APP_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.appSecretName }}
+                  key: {{ .Values.appIdSecretKey}}
+            - name: GITHUB_APP_INSTALL_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.appSecretName }}
+                  key: {{ .Values.appInstallIdSecretKey}}
+            - name: GITHUB_APP_PEM
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.appSecretName }}
+                  key: {{ .Values.appPemSecretKey}}
+            {{- end }}
+
+            # or, PAT Auth
+            {{- if .Values.githubPat }}
             - name: GITHUB_PAT
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.secretName }}
                   key: {{ .Values.secretKey }}
+            {{- end }}
 
               # Any injected env values from values.yaml will go here
               {{- range .Values.runnerEnv }}

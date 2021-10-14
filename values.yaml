@@ -12,13 +12,36 @@ githubRepository: ""
 # eg. github.mycompany.com
 githubDomain: ""
 
-# The name of the k8s secret to create.
+### Values for PAT Auth
+### Refer to https://github.com/redhat-actions/openshift-actions-runners#pat-guidelines
+
+# The name of the k8s secret to create for PAT auth
 secretName: "github-pat"
 # The name of the key that points to the data within the secret.
 # Modify this to store multiple PATs in one secret.
 secretKey: "github-pat"
 # The PAT itself - must be set if the secret is being created.
 githubPat: ""
+
+### End PAT Auth
+
+### Values for GitHub App Auth
+### Refer to https://github.com/redhat-actions/openshift-actions-runners/blob/main/docs/github-app-authentication.md
+
+# The name of the k8s secret to create for GitHub App Auth
+appSecretName: "github-app"
+# The name of the key that points to the Github App ID
+appIdSecretKey: "github-app-id"
+# The name of the key that points to the Github App Install ID
+appInstallIdSecretKey: "github-install-id"
+# The name of the key that points to the Github App PEM
+appPemSecretKey: "github-pem"
+## All 3 githubApp values are required
+githubAppId: ""
+githubAppInstallId: ""
+githubAppPem: ""
+
+### End App Auth
 
 # Pass labels using array syntax, which is curly braces surrounding comma-separated items.
 # --set runnerLabels="{ label1, label2 }" results in the labels "label1" and "label2".
