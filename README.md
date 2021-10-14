@@ -37,7 +37,7 @@ You can install runners into your cluster using the Helm chart in this repositor
 
 1. Runners can be scoped to an **organization** or a **repository**. Decide what the scope of your runner will be.
     - User-scoped runners are not supported by GitHub.
-2. Create a GitHub Personal Access Token as per the instructions in the [runner image README](https://github.com/redhat-actions/openshift-actions-runner#pat-guidelines).
+2. Create a GitHub Personal Access Token as per the instructions in the [runner image README](https://github.com/redhat-actions/openshift-actions-runner#pat-guidelines). Alternatively, create a Github App and install into your org or user account. Instructions are also found in the [image README](https://github.com/redhat-actions/openshift-actions-runners/tree/github_actions#running-with-github-app-authentication)
     - The default `secrets.GITHUB_TOKEN` **does not** have permission to manage self-hosted runners. See [Permissions for the GITHUB_TOKEN](https://docs.github.com/en/actions/reference/authentication-in-a-workflow#permissions-for-the-github_token).
 3. Add this repository as a Helm repository.
 ```bash
@@ -55,6 +55,10 @@ You can also clone this repository and reference the chart's directory. This all
 export GITHUB_PAT=c0ffeeface1234567890
 # For an org runner, this is the org.
 # For a repo runner, this is the repo owner (org or user).
+# Github App information if you are using Github App auth
+# export GITHUB_APP_ID=123456
+# export GITHUB_APP_INSTALL_ID=123456
+# export GITHUB_APP_PEM='-----RSA Key....'
 export GITHUB_OWNER=redhat-actions
 # For an org runner, omit this argument.
 # For a repo runner, the repo name.
@@ -70,8 +74,19 @@ helm install $RELEASE_NAME openshift-actions-runner/actions-runner \
     --set-string githubRepository=$GITHUB_REPO \
 && echo "---------------------------------------" \
 && helm get manifest $RELEASE_NAME | kubectl get -f -
+
+# For Github App Auth do
+helm install $RELEASE_NAME openshift-actions-runner/actions-runner \
+    --set-string githubAppId=$GITHUB_APP_ID \
+    --set-string githubAppInstallId=$GITHUB_APP_INSTALL_ID \
+    --set-string githubAppPem=$GITHUB_APP_PEM \
+    --set-string githubOwner=$GITHUB_OWNER \
+    --set-string githubRepository=$GITHUB_REPO \
+&& echo "---------------------------------------" \
+&& helm get manifest $RELEASE_NAME | kubectl get -f -
 ```
-5. You can re-run step 4 if you want to add runners with different images, labels, etc. You can leave out the `githubPat` on subsequent runs, since it will re-use an existing secret will be left out if it exists already.
+5. You can re-run step 4 if you want to add runners with different images, labels, etc. You can leave out the `githubPat` or `githubApp*` strings on subsequent runs, since it will re-use an existing secret.
+
 
 The runners should show up under `Settings > Actions > Self-hosted runners` shortly afterward.
 
