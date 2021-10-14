@@ -89,7 +89,7 @@ helm install $RELEASE_NAME openshift-actions-runner/actions-runner \
 helm install $RELEASE_NAME openshift-actions-runner/actions-runner \
     --set-string githubAppId=$GITHUB_APP_ID \
     --set-string githubAppInstallId=$GITHUB_APP_INSTALL_ID \
-    --set-string githubAppPem=$GITHUB_APP_PEM \
+    --set-string githubAppPem="$GITHUB_APP_PEM" \
     --set-string githubOwner=$GITHUB_OWNER \
     --set-string githubRepository=$GITHUB_REPO \
 && echo "---------------------------------------" \
