@@ -61,6 +61,11 @@ spec:
             - name: RUNNER_LABELS
               value: "{{ $taggedImage }},{{- range .Values.runnerLabels }}{{trim .}},{{- end }}"
 
+            {{- if .Values.runnerGroup }}
+            - name: RUNNER_GROUP
+              value: {{ .Values.runnerGroup }}
+            {{- end }}
+
             # App Auth
             {{- if .Values.githubAppId }}
             - name: GITHUB_APP_ID
