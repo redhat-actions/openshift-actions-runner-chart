@@ -47,6 +47,9 @@ githubAppPem: ""
 # --set runnerLabels="{ label1, label2 }" results in the labels "label1" and "label2".
 runnerLabels: []
 
+# The name of an organization runner group name to attach the runner to
+runnerGroup: ""
+
 # Add annotations to the deployment. This is easist with a values file but can be done on the command line with:
 # --set annotations.<key>=<value> is equivalent to the values file:
 # annotations:
