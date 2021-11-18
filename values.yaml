@@ -60,6 +60,10 @@ annotations: {}
 # and how many jobs you want to run concurrently.
 replicas: 1
 
+# If these should be registered as ephemeral runners
+# i.e. will quit and restart after running one job
+ephemeral: false
+
 serviceAccountName: default
 
 # Adjust requests and limits depending on your resources,

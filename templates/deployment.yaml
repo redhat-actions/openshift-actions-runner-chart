@@ -66,6 +66,11 @@ spec:
               value: {{ .Values.runnerGroup }}
             {{- end }}
 
+            {{- if .Values.ephemeral }}
+            - name: EPHEMERAL
+              value: "{{ .Values.ephemeral }}"
+            {{- end }}
+
             # App Auth
             {{- if .Values.githubAppId }}
             - name: GITHUB_APP_ID
