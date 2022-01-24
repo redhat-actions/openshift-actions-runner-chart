@@ -2,11 +2,11 @@ apiVersion: v1
 entries:
   actions-runner:
   - apiVersion: v2
-    created: "2022-01-24T15:20:29.159107484Z"
+    created: "2022-01-24T15:26:17.334143854Z"
     description: Install GitHub Action self-hosted runners into a Kubernetes cluster.
-    digest: 75148057581a9e342d89523a97eb8d697c9e38f6842dd52c5e503d0062225e85
+    digest: 903327a773076f6d078c1767853429d932215c7e8f66e941b3977fc43fe5dcd8
     name: actions-runner
     urls:
-    - https://redhat-actions.github.io/openshift-actions-runner-chart/packages/actions-runner-1.4.tgz
-    version: "1.4"
-generated: "2022-01-24T15:20:29.158377575Z"
+    - https://redhat-actions.github.io/openshift-actions-runner-chart/packages/actions-runner-1.tgz
+    version: "1"
+generated: "2022-01-24T15:26:17.333362394Z"
