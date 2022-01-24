@@ -1,4 +1,4 @@
-# OpenShift GitHub Actions Runner Chart
+# OpenShift GitHub Actions Runner Chart 
 
 [![Helm Lint](https://github.com/redhat-actions/openshift-actions-runner-chart/workflows/Helm%20Lint/badge.svg)](https://github.com/redhat-actions/openshift-actions-runner-chart/actions)
 [![Link checker](https://github.com/redhat-actions/openshift-actions-runner-chart/workflows/Link%20checker/badge.svg)](https://github.com/redhat-actions/openshift-actions-runner-chart/actions)
