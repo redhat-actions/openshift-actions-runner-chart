@@ -56,6 +56,17 @@ runnerGroup: ""
 #   key: value
 annotations: {}
 
+# Add nodeSelector to the deployment. This is easist with a values file but can be done on the command line with:
+# --set nodeSelector.<key>=<value> is equivalent to the values file:
+# Refer to https://docs.openshift.com/container-platform/4.7/nodes/scheduling/nodes-scheduler-node-selectors.html
+# nodeSelector:
+#   key: value
+nodeSelector: {}
+
+# Add affinity to the deployment. This is easist with a values file
+# Refer to https://docs.openshift.com/container-platform/4.7/nodes/scheduling/nodes-scheduler-node-affinity.html
+affinity: {}
+
 # Adjust replicas depending on your resources available,
 # and how many jobs you want to run concurrently.
 replicas: 1
