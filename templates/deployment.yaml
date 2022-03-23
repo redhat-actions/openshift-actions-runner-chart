@@ -30,6 +30,16 @@ spec:
       securityContext:
         runAsNonRoot: true
 
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      {{- end }}
+
+      {{- if .Values.affinity }}
+      affinity:
+        {{- toYaml .Values.affinity | nindent 8 }}
+      {{- end }}
+
       volumes:
         # Enable custom cluster PKI
         # https://docs.openshift.com/container-platform/4.6/networking/configuring-a-custom-pki.html
