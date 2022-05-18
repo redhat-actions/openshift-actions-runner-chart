@@ -102,3 +102,5 @@ runnerEnv:
     #   value: http://proxy.example.com:9000
     # - name: no_proxy
     #   value: localhost
+
+containerAuth: containerAuthFoo
