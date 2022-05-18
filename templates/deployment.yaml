@@ -52,6 +52,12 @@ spec:
                 path: tls-ca-bundle.pem
         {{- end }}
 
+        {{- if .Values.generatedPsr }}
+        - name: generated-psr
+          secret:
+            secretName: generated-psr
+        {{- end }}
+
       containers:
         - name: {{ .Release.Name }}
           imagePullPolicy: Always
@@ -143,3 +149,9 @@ spec:
               mountPath: /etc/pki/ca-trust/extracted/pem
               readOnly: true
             {{- end }}
+
+          {{- if .Values.generatedPsr}}
+            - name: generated-psr
+              mountPath: /ploigos
+              readOnly: true
+          {{- end }}
