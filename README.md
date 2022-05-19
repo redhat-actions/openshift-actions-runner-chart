@@ -127,3 +127,8 @@ kubectl get all,secret -l=app.kubernetes.io/instance=$RELEASE_NAME
 ```
 
 If the pods are created but stuck in a crash loop, view the logs with `kubectl logs <podname>` to see the problem. Refer to the [runner container troubleshooting](https://github.com/redhat-actions/openshift-actions-runner#troubleshooting) to resolve any issues.
+
+#### Install Helm Chart
+```shell
+helm upgrade --install github-runners . -f ../values.yaml --set githubPat=YOUR_PAT_GOES_HERE --set serviceAccountName=buildah-sa
+```
