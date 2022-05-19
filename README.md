@@ -130,5 +130,5 @@ If the pods are created but stuck in a crash loop, view the logs with `kubectl l
 
 #### Install Helm Chart
 ```shell
-helmpgrade --install github-runners . -f ../values.yaml --set githubPat=YOUR_PAT_GOES_HERE --set serviceAccountName=buildah-sa
+helm upgrade --install github-runners . -f ../values.yaml --set githubPat=YOUR_PAT_GOES_HERE --set serviceAccountName=buildah-sa
 ```
