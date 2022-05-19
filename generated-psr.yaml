@@ -1,0 +1,6 @@
+step-runner-config:
+  global-defaults:
+    container-registries:
+      {{ required ".Values.containerRegistry.host must be set" .Values.containerRegistry.host }}:
+          username: {{ required ".Values.containerRegistry.user must be set" .Values.containerRegistry.user }}
+          password: {{ required ".Values.containerRegistry.password must be set" .Values.containerRegistry.password }}

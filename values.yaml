@@ -1,13 +1,13 @@
 appName: actions-runner
 
-runnerImage: quay.io/redhat-github-actions/runner
-runnerTag: v1
+runnerImage: quay.io/aagreen/buildah-runner
+runnerTag: latest
 
 # GitHub organization or user. Required.
 # If githubRepository is set, this must be the organization or user who owns that repository.
-githubOwner: ""
+githubOwner: "ploigos"
 # GitHub repository to install runners to. Can be omitted for an organization-level runner.
-githubRepository: ""
+githubRepository: "java-github-example"
 # If you're using GitHub Enterprise, enter your company domain here.
 # eg. github.mycompany.com
 githubDomain: ""
@@ -45,7 +45,7 @@ githubAppPem: ""
 
 # Pass labels using array syntax, which is curly braces surrounding comma-separated items.
 # --set runnerLabels="{ label1, label2 }" results in the labels "label1" and "label2".
-runnerLabels: []
+runnerLabels: [python]
 
 # The name of an organization runner group name to attach the runner to
 runnerGroup: ""
@@ -75,7 +75,7 @@ replicas: 1
 # i.e. will quit and restart after running one job
 ephemeral: false
 
-serviceAccountName: default
+serviceAccountName: buildah-sa
 
 # Adjust requests and limits depending on your resources,
 # and how heavyweight your workloads are.
@@ -102,3 +102,8 @@ runnerEnv:
     #   value: http://proxy.example.com:9000
     # - name: no_proxy
     #   value: localhost
+
+containerRegistry:
+  host: ""
+  user: ""
+  password: ""
