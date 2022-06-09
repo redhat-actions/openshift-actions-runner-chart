@@ -1,4 +1,4 @@
 apiVersion: v2
-version: "2.1"
+version: "2"
 name: actions-runner
 description: Install GitHub Action self-hosted runners into a Kubernetes cluster.
