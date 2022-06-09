@@ -63,6 +63,11 @@ annotations: {}
 #   key: value
 nodeSelector: {}
 
+# Private registries may require keys to read images from them. Specifying
+# ImagePullSecrets on a Pod is the recommended approach to run containers based
+# on images in private registries.
+imagePullSecrets: {}
+
 # Add affinity to the deployment. This is easist with a values file
 # Refer to https://docs.openshift.com/container-platform/4.7/nodes/scheduling/nodes-scheduler-node-affinity.html
 affinity: {}
