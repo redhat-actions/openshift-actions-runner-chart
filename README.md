@@ -102,6 +102,8 @@ helm install $RELEASE_NAME openshift-actions-runner/actions-runner \
     --set-string githubRunnerToken=$GITHUB_RUNNER_TOKEN \
     --set-string githubOwner=$GITHUB_OWNER \
     --set-string githubRepository=$GITHUB_REPO \
+&& echo "---------------------------------------" \
+&& helm get manifest $RELEASE_NAME | kubectl get -f -
 ```
 5. You can re-run step 4 if you want to add runners with different images, labels, etc. You can leave out the `githubPat` or `githubApp*` strings on subsequent runs, since the chart will re-use an existing secret.
 
