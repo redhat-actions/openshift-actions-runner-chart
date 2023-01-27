@@ -64,6 +64,8 @@ export GITHUB_PAT=c0ffeeface1234567890
 export GITHUB_APP_ID=123456
 export GITHUB_APP_INSTALL_ID=7890123
 export GITHUB_APP_PEM='----------BEGIN RSA PRIVATE KEY...'
+# OR, Github Runner Token
+export GITHUB_RUNNER_TOKEN=123456
 
 # For an org runner, this is the org.
 # For a repo runner, this is the repo owner (org or user).
@@ -94,6 +96,12 @@ helm install $RELEASE_NAME openshift-actions-runner/actions-runner \
     --set-string githubRepository=$GITHUB_REPO \
 && echo "---------------------------------------" \
 && helm get manifest $RELEASE_NAME | kubectl get -f -
+
+# OR, Installing using Github Runner Token
+helm install $RELEASE_NAME openshift-actions-runner/actions-runner \
+    --set-string githubRunnerToken=$GITHUB_RUNNER_TOKEN \
+    --set-string githubOwner=$GITHUB_OWNER \
+    --set-string githubRepository=$GITHUB_REPO \
 ```
 5. You can re-run step 4 if you want to add runners with different images, labels, etc. You can leave out the `githubPat` or `githubApp*` strings on subsequent runs, since the chart will re-use an existing secret.
 

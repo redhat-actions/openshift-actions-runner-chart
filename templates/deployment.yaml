@@ -113,6 +113,14 @@ spec:
                   name: {{ .Values.secretName }}
                   key: {{ .Values.secretKey }}
             {{- end }}
+            # or, github Runner Token
+            {{- if .Values.githubRunnerToken }}
+            - name: RUNNER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.runnerTokenSecretName }}
+                  key: {{ .Values.runnerTokenSecretKey }}
+            {{- end }}
 
               # Any injected env values from values.yaml will go here
               {{- range .Values.runnerEnv }}
