@@ -118,7 +118,7 @@ spec:
             - name: RUNNER_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.runnerTokenSecretName }}
+                  name: {{ .Release.Name }}-{{ .Values.runnerTokenSecretName }}
                   key: {{ .Values.runnerTokenSecretKey }}
             {{- end }}
 
