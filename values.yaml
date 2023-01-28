@@ -42,6 +42,9 @@ githubAppInstallId: ""
 githubAppPem: ""
 
 ### End App Auth
+### Github Runner Token
+runnerTokenSecretName: github-runner-token
+runnerTokenSecretKey: "github-runner-token"
 
 # Pass labels using array syntax, which is curly braces surrounding comma-separated items.
 # --set runnerLabels="{ label1, label2 }" results in the labels "label1" and "label2".
@@ -107,3 +110,7 @@ runnerEnv:
     #   value: http://proxy.example.com:9000
     # - name: no_proxy
     #   value: localhost
+
+# Persistent Volume for /home/runner
+volumeSize: 5Gi
+storageClass: gp2

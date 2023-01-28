@@ -64,6 +64,8 @@ export GITHUB_PAT=c0ffeeface1234567890
 export GITHUB_APP_ID=123456
 export GITHUB_APP_INSTALL_ID=7890123
 export GITHUB_APP_PEM='----------BEGIN RSA PRIVATE KEY...'
+# OR, Github Runner Token
+export GITHUB_RUNNER_TOKEN=123456
 
 # For an org runner, this is the org.
 # For a repo runner, this is the repo owner (org or user).
@@ -90,6 +92,14 @@ helm install $RELEASE_NAME openshift-actions-runner/actions-runner \
     --set-string githubAppId=$GITHUB_APP_ID \
     --set-string githubAppInstallId=$GITHUB_APP_INSTALL_ID \
     --set-string githubAppPem="$GITHUB_APP_PEM" \
+    --set-string githubOwner=$GITHUB_OWNER \
+    --set-string githubRepository=$GITHUB_REPO \
+&& echo "---------------------------------------" \
+&& helm get manifest $RELEASE_NAME | kubectl get -f -
+
+# OR, Installing using Github Runner Token
+helm install $RELEASE_NAME openshift-actions-runner/actions-runner \
+    --set-string githubRunnerToken=$GITHUB_RUNNER_TOKEN \
     --set-string githubOwner=$GITHUB_OWNER \
     --set-string githubRepository=$GITHUB_REPO \
 && echo "---------------------------------------" \
