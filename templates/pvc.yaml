@@ -1,0 +1,16 @@
+{{- if .Values.githubRunnerToken }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "{{ .Release.Name }}"
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "0"
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.volumeSize }}
+  storageClassName: {{ .Values.storageClass }}
+{{ end }}

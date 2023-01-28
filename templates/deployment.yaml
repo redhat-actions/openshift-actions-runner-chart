@@ -56,6 +56,11 @@ spec:
               - key: ca-bundle.crt
                 path: tls-ca-bundle.pem
         {{- end }}
+        {{- if .Values.githubRunnerToken }}
+        - name: home-runner-pv
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}
+        {{- end }}
 
       containers:
         - name: {{ .Release.Name }}
@@ -113,20 +118,12 @@ spec:
                   name: {{ .Values.secretName }}
                   key: {{ .Values.secretKey }}
             {{- end }}
-            # or, github Runner Token
-            {{- if .Values.githubRunnerToken }}
-            - name: RUNNER_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Release.Name }}-{{ .Values.runnerTokenSecretName }}
-                  key: {{ .Values.runnerTokenSecretKey }}
-            {{- end }}
 
-              # Any injected env values from values.yaml will go here
-              {{- range .Values.runnerEnv }}
+            # Any injected env values from values.yaml will go here
+            {{- range .Values.runnerEnv }}
             - name: {{ .name }}
               value: {{ .value }}
-        {{- end }}
+            {{- end }}
 
           securityContext:
 
@@ -155,4 +152,8 @@ spec:
             - name: trusted-ca
               mountPath: /etc/pki/ca-trust/extracted/pem
               readOnly: true
+            {{- end }}
+            {{- if .Values.githubRunnerToken }}
+            - name: home-runner-pv
+              mountPath: /home/runner
             {{- end }}
