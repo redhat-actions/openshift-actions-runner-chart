@@ -86,7 +86,9 @@ serviceAccountName: default
 # and how heavyweight your workloads are.
 resources:
   limits: {}
-  requests: {}
+  requests:
+    cpu: 100m
+    memory: 512Mi
 
 # Enable custom cluster PKI loading
 # https://docs.openshift.com/container-platform/4.6/networking/configuring-a-custom-pki.html
