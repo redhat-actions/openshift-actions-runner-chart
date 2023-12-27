@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 env:
   PAGES_BRANCH: release-chart
-  PAGES_URL: https://redhat-actions.github.io/openshift-actions-runner-chart/
+  PAGES_URL: https://boris-ning-usds.github.io/openshift-actions-runner-chart/
   CHART_OUTPUT_DIR: packages/
   CHART_SRC_DIR: .
 
