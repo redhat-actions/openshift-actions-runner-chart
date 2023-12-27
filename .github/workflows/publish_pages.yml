@@ -3,6 +3,7 @@ on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
 env:
   PAGES_BRANCH: release-chart
   PAGES_URL: https://redhat-actions.github.io/openshift-actions-runner-chart/
@@ -12,11 +13,11 @@ env:
 jobs:
   package-chart:
     name: Package Helm Chart
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     concurrency: publish
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Helm lint
         run: helm lint ${{ env.CHART_SRC_DIR }}
@@ -73,7 +74,7 @@ jobs:
           echo "CHART_FILENAME=$(basename $CHART_PATH)" >> $GITHUB_ENV
 
       - name: Upload helm chart
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           path: ${{ env.CHART_PATH }}
           name: ${{ env.CHART_FILENAME }}

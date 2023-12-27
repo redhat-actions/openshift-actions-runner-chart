@@ -2,6 +2,7 @@ name: Helm Lint
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 env:
   CHART_DIR: .
@@ -9,10 +10,10 @@ env:
 jobs:
   helm_lint:
     name: Helm Lint
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - run: helm lint ${{ env.CHART_DIR }}
 
