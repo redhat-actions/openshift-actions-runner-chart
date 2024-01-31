@@ -14,6 +14,14 @@ You can deploy runners automatically in an Actions workflow using the [**OpenShi
 
 While this chart and the images are developed for and tested on OpenShift, they do not contain any OpenShift specific code and should be compatible with any Kubernetes platform.
 
+## Deploying New Version
+
+Deploying a new [chart version](https://boris-ning-usds.github.io/openshift-actions-runner-chart) involves manually creating a new tag.
+
+- `git tag` - view all outstanding tags
+- `git tag v1.0.x` - to create a tag for v1.0.x
+- `git push --tags` - to push the new tag for deployment
+
 ## Forked Modifications
 
 - Removed CPU limits from [values.yaml](./values.yaml) and [deployment.yaml](./templates/deployment.yaml) to allow burstable usage of Github action runners.
