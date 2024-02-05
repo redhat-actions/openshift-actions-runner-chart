@@ -126,8 +126,8 @@ spec:
             requests:
               memory: {{ .Values.memoryRequest }}
               cpu: {{ .Values.cpuRequest }}
-            # limits:
-            #   memory: {{ .Values.memoryLimit }}
+            limits:
+              memory: {{ .Values.memoryRequest }}
 
           # Wait until the runner service is actually listening before the pod goes into the Ready state.
           # The entrypoint script takes 5-10s to connect to GitHub and start listening for jobs.
