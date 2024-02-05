@@ -96,6 +96,12 @@ resources:
 # https://docs.openshift.com/container-platform/4.6/networking/configuring-a-custom-pki.html
 clusterPKI: false
 
+enablePersistantVolume: false
+pvRequestStorage: 10Gi
+pvStorageClassName: azure-4-file
+pvAccessModes: ReadWriteMany
+pvVolumeMode: Filesystem 
+
 # You can inject arbitrary environment variables here:
 runnerEnv:
     # - name: ENV_VAR
