@@ -101,6 +101,7 @@ pvRequestStorage: 10Gi
 pvStorageClassName: azure-4-file
 pvAccessModes: ReadWriteMany
 pvVolumeMode: Filesystem 
+pvVolumePath: "/home/runner/_work" 
 
 # You can inject arbitrary environment variables here:
 runnerEnv:

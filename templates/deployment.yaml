@@ -154,5 +154,5 @@ spec:
             {{- end }}
             {{- if .Values.enablePersistantVolume }}
             - name: runner-work-dir
-              mountPath: /home/runner/_work
+              mountPath: {{ .Values.pvVolumePath}}
             {{- end }}
